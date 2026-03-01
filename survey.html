@@ -101,7 +101,38 @@ recommendation="ممتاز! حافظ على تحديث خطتك وتجهيزات
 
 document.getElementById("result").style.display="block";
 document.getElementById("scoreText").innerText=level+" ("+percent+"%)";
-document.getElementById("recommendation").innerText=recommendation;
+let tips = [];
+
+if (percent < 40) {
+  tips = [
+    "اكتب خطة طوارئ واضحة ومحدثة للأسرة.",
+    "جهّز حقيبة طوارئ تكفي 72 ساعة لكل فرد.",
+    "تأكد من وجود حقيبة إسعافات أولية مكتملة.",
+    "افحص صلاحية كاشف الدخان وطفاية الحريق.",
+    "حدد وسيلة تواصل بديلة عند انقطاع الشبكة."
+  ];
+} else if (percent < 75) {
+  tips = [
+    "حدّث خطة الطوارئ وحدد أدوار كل فرد.",
+    "راجع مخزون الماء والطعام كل 3 أشهر.",
+    "احتفظ بنسخ رقمية من الوثائق المهمة.",
+    "تأكد من شحن المصابيح والبطاريات الاحتياطية.",
+    "جرّب تدريبًا منزليًا لمحاكاة الطوارئ."
+  ];
+} else {
+  tips = [
+    "ممتاز، حافظ على تحديث خطة الطوارئ بانتظام.",
+    "افحص صلاحية التجهيزات كل فترة.",
+    "راجع خطتك مع الأسرة مرتين سنويًا."
+  ];
+}
+
+document.getElementById("recommendation").innerHTML =
+  `<div style="font-weight:bold;margin-bottom:8px;">${recommendation}</div>
+   <div style="margin-top:10px;font-weight:bold;">توصيات عملية:</div>
+   <ul style="margin-top:8px;line-height:1.9;">
+     ${tips.map(t => `<li>${t}</li>`).join("")}
+   </ul>`;
 document.getElementById("progressBar").style.width=percent+"%";
 }
 </script>
