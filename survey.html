@@ -1,378 +1,757 @@
+<!-- survey.html -->
 <!DOCTYPE html>
 <html lang="ar" dir="rtl">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>استبيان جاهزية المنزل للطوارئ</title>
-<style>
-  :root{
-    --bg:#070b14;
-    --panel:#0d1424;
-    --panel2:#0b1220;
-    --border:rgba(255,255,255,.08);
-    --text:#eaf0ff;
-    --muted:rgba(234,240,255,.72);
-    --accent:#f59e0b;   /* برتقالي */
-    --accent2:#2563eb;  /* أزرق */
-    --good:#22c55e;
-  }
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>تقييم الجاهزية للطوارئ</title>
 
-  *{box-sizing:border-box}
-  body{
-    margin:0;
-    font-family: Tahoma, Arial, sans-serif;
-    background: radial-gradient(1200px 600px at 20% 0%, rgba(37,99,235,.22), transparent 60%),
-                radial-gradient(900px 500px at 80% 10%, rgba(245,158,11,.14), transparent 55%),
-                var(--bg);
-    color:var(--text);
-  }
+  <style>
+    :root{
+      --bg0:#070b12;
+      --bg1:#0b1220;
+      --panel:rgba(255,255,255,.06);
+      --panel2:rgba(255,255,255,.08);
+      --border:rgba(255,255,255,.10);
+      --text:#eaf0ff;
+      --muted:rgba(234,240,255,.72);
+      --accent:#66f0d0;
+      --accent2:#6aa7ff;
+      --bad:#ff6b6b;
+      --shadow:0 24px 70px rgba(0,0,0,.45);
+      --radius:18px;
+    }
+    *{box-sizing:border-box}
+    body{
+      margin:0;
+      font-family:Tahoma, Arial, sans-serif;
+      color:var(--text);
+      background:
+        radial-gradient(900px 500px at 80% 15%, rgba(106,167,255,.20), transparent 55%),
+        radial-gradient(900px 500px at 20% 85%, rgba(102,240,208,.14), transparent 60%),
+        linear-gradient(180deg, var(--bg0), var(--bg1));
+      min-height:100vh;
+    }
+    .topbar{
+      position:sticky; top:0; z-index:10;
+      background:linear-gradient(180deg, rgba(11,18,32,.92), rgba(11,18,32,.68));
+      border-bottom:1px solid var(--border);
+      backdrop-filter: blur(10px);
+      padding:12px 16px;
+      display:flex;
+      justify-content:space-between;
+      align-items:center;
+      gap:12px;
+    }
+    .brand{
+      display:flex; align-items:center; gap:10px;
+      font-weight:800;
+      white-space:nowrap;
+    }
+    .brand .dot{
+      width:10px; height:10px; border-radius:999px;
+      background:linear-gradient(90deg,var(--accent),var(--accent2));
+      box-shadow:0 0 22px rgba(102,240,208,.35);
+    }
+    .lang{
+      display:flex; gap:8px; align-items:center;
+    }
+    .btn{
+      border:1px solid var(--border);
+      background:rgba(255,255,255,.06);
+      color:var(--text);
+      padding:8px 12px;
+      border-radius:999px;
+      cursor:pointer;
+      font-weight:700;
+      transition:.2s ease;
+    }
+    .btn:hover{ background:rgba(255,255,255,.10) }
+    .wrap{
+      max-width:1050px;
+      margin:0 auto;
+      padding:22px 16px 70px;
+      display:grid;
+      grid-template-columns: 1fr;
+      gap:14px;
+    }
+    .headerCard{
+      border:1px solid var(--border);
+      background:rgba(255,255,255,.05);
+      border-radius:var(--radius);
+      box-shadow:var(--shadow);
+      padding:18px 16px;
+    }
+    h1{
+      margin:0 0 6px;
+      font-size:28px;
+      letter-spacing:.2px;
+    }
+    .sub{
+      margin:0;
+      color:var(--muted);
+      line-height:1.8;
+      font-size:14.8px;
+    }
+    .counter{
+      margin-top:10px;
+      display:flex;
+      justify-content:flex-start;
+      gap:10px;
+      color:rgba(234,240,255,.65);
+      font-size:13.5px;
+    }
+    .pill{
+      border:1px solid var(--border);
+      background:rgba(255,255,255,.05);
+      padding:6px 10px;
+      border-radius:999px;
+    }
 
-  /* شريط علوي بسيط */
-  .topbar{
-    position:sticky;
-    top:0;
-    z-index:5;
-    backdrop-filter: blur(10px);
-    background: linear-gradient(180deg, rgba(13,20,36,.92), rgba(13,20,36,.72));
-    border-bottom:1px solid var(--border);
-    padding:14px 18px;
-  }
-  .topbar .title{
-    display:flex;
-    align-items:center;
-    justify-content:space-between;
-    gap:12px;
-    max-width:1100px;
-    margin:0 auto;
-  }
-  .badge{
-    font-size:12px;
-    color:var(--muted);
-    border:1px solid var(--border);
-    padding:6px 10px;
-    border-radius:999px;
-    background: rgba(255,255,255,.03);
-  }
+    .grid{
+      display:grid;
+      grid-template-columns: 1.2fr .8fr;
+      gap:14px;
+      align-items:start;
+    }
+    .panel{
+      border:1px solid var(--border);
+      background:rgba(255,255,255,.05);
+      border-radius:var(--radius);
+      box-shadow:0 16px 40px rgba(0,0,0,.25);
+      padding:16px;
+    }
+    .sectionTitle{
+      margin:0 0 10px;
+      font-size:16px;
+      font-weight:800;
+      color:rgba(234,240,255,.92);
+    }
 
-  /* أزرار اللغة */
-  .langWrap{
-    text-align:left;
-    padding:14px 18px 0;
-    max-width:1100px;
-    margin:0 auto;
-  }
-  .langWrap button{
-    background: rgba(255,255,255,.05);
-    color:var(--text);
-    border:1px solid var(--border);
-    padding:8px 12px;
-    border-radius:999px;
-    cursor:pointer;
-    transition:.15s;
-    font-weight:700;
-  }
-  .langWrap button:hover{transform:translateY(-1px); border-color:rgba(245,158,11,.35)}
-  .langWrap button.active{
-    border-color:rgba(245,158,11,.55);
-    box-shadow: 0 0 0 3px rgba(245,158,11,.12);
-  }
+    .fieldRow{
+      display:grid;
+      grid-template-columns: 1fr 1fr;
+      gap:10px;
+      margin-bottom:12px;
+    }
+    label{
+      display:block;
+      margin-bottom:6px;
+      color:rgba(234,240,255,.82);
+      font-size:13.5px;
+      font-weight:700;
+    }
+    select, input{
+      width:100%;
+      padding:10px 12px;
+      border-radius:12px;
+      border:1px solid rgba(255,255,255,.12);
+      background:rgba(0,0,0,.20);
+      color:var(--text);
+      outline:none;
+    }
+    input::placeholder{ color: rgba(234,240,255,.45); }
+    .checks{
+      display:grid;
+      grid-template-columns:1fr;
+      gap:10px;
+      margin-bottom:12px;
+    }
+    .check{
+      display:flex;
+      align-items:center;
+      gap:10px;
+      padding:10px 12px;
+      border:1px solid rgba(255,255,255,.10);
+      background:rgba(255,255,255,.04);
+      border-radius:14px;
+    }
+    .check input{ width:auto }
+    .check span{ color:rgba(234,240,255,.85); font-weight:700; font-size:14px }
 
-  /* العداد */
-  #visitCounter{
-    max-width:1100px;
-    margin:10px auto 0;
-    padding:0 18px;
-    color:var(--muted);
-    font-size:13px;
-    text-align:left;
-  }
+    .q{
+      margin:12px 0;
+      padding:12px 12px;
+      border:1px solid rgba(255,255,255,.10);
+      background:rgba(255,255,255,.04);
+      border-radius:16px;
+    }
+    .qHead{
+      display:flex;
+      justify-content:space-between;
+      align-items:flex-start;
+      gap:10px;
+      margin-bottom:10px;
+      font-weight:800;
+      line-height:1.6;
+    }
+    .qSmall{
+      color:rgba(234,240,255,.55);
+      font-size:12px;
+      font-weight:700;
+      white-space:nowrap;
+    }
 
-  /* تخطيط عام */
-  .container{
-    max-width:1100px;
-    margin:18px auto 28px;
-    padding:0 18px;
-  }
+    .actionRow{
+      display:flex;
+      gap:10px;
+      margin-top:10px;
+      flex-wrap:wrap;
+    }
+    .btn.primary{
+      border:none;
+      background:linear-gradient(90deg,var(--accent2),var(--accent));
+      color:#06101d;
+      box-shadow:0 10px 30px rgba(106,167,255,.18);
+    }
+    .resultBox{
+      display:none;
+      margin-top:12px;
+      padding:14px;
+      border-radius:16px;
+      border:1px solid rgba(255,255,255,.12);
+      background:rgba(255,255,255,.04);
+    }
+    .scoreLine{
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      gap:10px;
+      font-weight:900;
+    }
+    .badge{
+      padding:6px 10px;
+      border-radius:999px;
+      background:rgba(102,240,208,.14);
+      border:1px solid rgba(102,240,208,.30);
+      color:rgba(234,240,255,.95);
+      font-size:12.5px;
+      font-weight:900;
+      white-space:nowrap;
+    }
+    .progress{
+      margin:10px 0 8px;
+      height:12px;
+      border-radius:999px;
+      background:rgba(255,255,255,.12);
+      overflow:hidden;
+    }
+    .bar{
+      height:100%;
+      width:0%;
+      border-radius:999px;
+      background:linear-gradient(90deg,var(--accent2),var(--accent));
+      transition: width .25s ease;
+    }
+    .rec{
+      margin-top:8px;
+      color:rgba(234,240,255,.84);
+      line-height:1.85;
+      font-size:14px;
+    }
+    .rec ul{ margin:10px 0 0; padding:0 18px }
+    .rec li{ margin:6px 0 }
 
-  h1{
-    margin:12px 0 14px;
-    font-size:30px;
-    letter-spacing:.2px;
-  }
-
-  form{
-    background: linear-gradient(180deg, rgba(13,20,36,.9), rgba(11,18,32,.9));
-    border:1px solid var(--border);
-    border-radius:18px;
-    padding:18px;
-    box-shadow: 0 18px 40px rgba(0,0,0,.35);
-  }
-
-  /* كل سؤال */
-  .question{
-    background: rgba(255,255,255,.02);
-    border:1px solid var(--border);
-    border-radius:14px;
-    padding:14px 14px;
-    margin:12px 0;
-  }
-  .question p{
-    margin:0 0 10px;
-    font-size:16px;
-    color:var(--text);
-    font-weight:700;
-  }
-
-  /* select */
-  select{
-    width:100%;
-    padding:12px 12px;
-    border-radius:12px;
-    border:1px solid rgba(255,255,255,.12);
-    background: rgba(0,0,0,.25);
-    color:var(--text);
-    outline:none;
-  }
-  select:focus{
-    border-color:rgba(245,158,11,.55);
-    box-shadow:0 0 0 3px rgba(245,158,11,.12);
-  }
-
-  /* زر الحساب */
-  button[type="button"], button.calcBtn{
-    width:100%;
-    margin-top:14px;
-    padding:14px 14px;
-    border:none;
-    border-radius:14px;
-    font-weight:800;
-    cursor:pointer;
-    color:#08101f;
-    background: linear-gradient(90deg, var(--accent), #ffd08a);
-    transition:.15s;
-  }
-  button[type="button"]:hover, button.calcBtn:hover{
-    transform:translateY(-1px);
-    filter:saturate(1.05);
-  }
-
-  /* النتيجة */
-  .result{
-    margin-top:16px;
-    display:block;
-    background: rgba(255,255,255,.03);
-    border:1px solid var(--border);
-    border-radius:16px;
-    padding:16px;
-  }
-  .result h3{
-    margin:0 0 10px;
-    font-size:18px;
-  }
-
-  /* شريط التقدم */
-  .progress{
-    width:100%;
-    height:12px;
-    background: rgba(255,255,255,.08);
-    border-radius:999px;
-    overflow:hidden;
-    margin:10px 0 12px;
-  }
-  .progress-bar{
-    height:100%;
-    width:0%;
-    background: linear-gradient(90deg, var(--accent2), var(--accent));
-    border-radius:999px;
-    transition: width .25s ease;
-  }
-
-  /* التوصيات */
-  #recommendation{
-    color:var(--muted);
-    line-height:1.75;
-  }
-  #recommendation ul{
-    margin:10px 0 0;
-    padding:0 18px 0 0;
-  }
-  #recommendation li{
-    margin:6px 0;
-  }
-</style>
+    @media (max-width:980px){
+      .grid{ grid-template-columns:1fr; }
+      .fieldRow{ grid-template-columns:1fr; }
+    }
+  </style>
 </head>
+
 <body>
-  <div style="text-align:left; padding:10px;">
-  <button onclick="setLanguage('ar')">AR</button>
-  <button onclick="setLanguage('en')">EN</button>
-</div>
-<div id="visitCounter" style="text-align:center; margin:12px 0; font-weight:700;">
-  عدد الزيارات: ...
-</div>
-<div class="container">
-<h1>مؤشر الجاهزية للطوارئ</h1>
-<p style="color:rgba(234,240,255,.72);margin-top:-6px;font-size:14px;">
-قياس دقيق لمدى استعدادك وأسرتك للتعامل مع الحالات الطارئة.
-</p>
+  <div class="topbar">
+    <div class="brand"><span class="dot"></span><span id="brandText">جاهز</span></div>
+    <div class="lang">
+      <button class="btn" onclick="setLang('ar')">AR</button>
+      <button class="btn" onclick="setLang('en')">EN</button>
+    </div>
+  </div>
 
-<form id="surveyForm">
+  <div class="wrap">
+    <div class="headerCard">
+      <h1 id="pageTitle">قيّم جاهزيتك خلال دقيقة</h1>
+      <p class="sub" id="pageSub">أجب بسرعة لتحصل على مؤشر جاهزية + توصيات عملية قابلة للتنفيذ.</p>
 
-<div id="questions"></div>
+      <div class="counter">
+        <span class="pill" id="visitCounter">عدد الزيارات: ...</span>
+      </div>
+    </div>
 
-<button type="button" onclick="calculate()">احسب النتيجة</button>
+    <div class="grid">
+      <!-- الاستبيان -->
+      <div class="panel">
+        <div class="sectionTitle" id="secSurvey">الاستبيان</div>
 
-<div class="result" id="result" style="display:none;">
-<h3 id="scoreText"></h3>
-<div class="progress"><div class="progress-bar" id="progressBar"></div></div>
-<p id="recommendation"></p>
-</div>
+        <!-- بيانات السكن -->
+        <div class="sectionTitle" id="secHome">بيانات السكن</div>
+        <div class="fieldRow">
+          <div>
+            <label id="lblHousingType">نوع السكن</label>
+            <select id="housingType">
+              <option value="" selected>— اختر —</option>
+              <option value="apartment">شقة</option>
+              <option value="villa">فيلا</option>
+              <option value="shared">سكن مشترك</option>
+              <option value="other">أخرى</option>
+            </select>
+          </div>
 
-</form>
-</div>
+          <div>
+            <label id="lblArea">المنطقة / المدينة</label>
+            <input id="area" type="text" placeholder="مثال: أبوظبي - الخالدية" />
+          </div>
+        </div>
 
-<script>
-const questionsData = [
-"هل لديك خطة طوارئ مكتوبة للأسرة؟",
-"هل يعرف جميع أفراد الأسرة أدوارهم وقت الطوارئ؟",
-"هل لديكم نقطة تجمع محددة خارج المنزل؟",
-"هل لديكم أرقام الطوارئ محفوظة؟",
-"هل لديكم وسيلة اتصال بديلة عند انقطاع الشبكة؟",
-"هل لديك صندوق طوارئ يكفي 72 ساعة؟",
-"هل يتوفر ماء كافٍ لكل فرد لمدة 72 ساعة؟",
-"هل لديك مواد غذائية غير قابلة للتلف؟",
-"هل توجد حقيبة إسعافات أولية مكتملة؟",
-"هل لديك مصابيح وبطاريات احتياطية؟",
-"هل لديك كاشف دخان يعمل؟",
-"هل لديك طفاية حريق صالحة؟",
-"هل تعرف كيفية فصل الغاز والكهرباء؟",
-"هل تحتفظ بنسخ رقمية من الوثائق المهمة؟"
-];
+        <div class="fieldRow">
+          <div>
+            <label id="lblResidents">عدد القاطنين في المنزل</label>
+            <input id="residents" type="number" min="1" placeholder="مثال: 6" />
+          </div>
+          <div>
+            <label id="lblSupplies">مدة الاكتفاء (ماء + غذاء)</label>
+            <select id="suppliesDuration">
+              <option value="0" selected>أقل من 24 ساعة</option>
+              <option value="1">24–48 ساعة</option>
+              <option value="2">48–72 ساعة</option>
+              <option value="3">أكثر من 72 ساعة</option>
+            </select>
+          </div>
+        </div>
 
-const options = [
-{value:0,text:"غير متوفر"},
-{value:1,text:"ضعيف"},
-{value:2,text:"متوسط"},
-{value:3,text:"جيد"},
-{value:4,text:"ممتاز"}
-];
+        <div class="checks">
+          <div class="check">
+            <input id="hasKids" type="checkbox" />
+            <span id="chkKids">يوجد أطفال (أقل من 5 سنوات)</span>
+          </div>
+          <div class="check">
+            <input id="hasSeniors" type="checkbox" />
+            <span id="chkSeniors">يوجد كبار سن (+65)</span>
+          </div>
+          <div class="check">
+            <input id="hasDetermination" type="checkbox" />
+            <span id="chkDetermination">يوجد شخص من أصحاب الهمم</span>
+          </div>
+        </div>
 
-const questionsContainer = document.getElementById("questions");
+        <div class="sectionTitle" id="secQuestions">أسئلة الجاهزية</div>
+        <div id="questions"></div>
 
-questionsData.forEach((q,index)=>{
-let div=document.createElement("div");
-div.className="question";
-let html=`<h3>${index+1}. ${q}</h3><select id="q${index}">`;
-options.forEach(o=>{html+=`<option value="${o.value}">${o.text}</option>`});
-html+=`</select>`;
-div.innerHTML=html;
-questionsContainer.appendChild(div);
-});
+        <div class="actionRow">
+          <button class="btn primary" type="button" onclick="calculate()" id="btnCalc">احسب النتيجة</button>
+          <button class="btn" type="button" onclick="resetAll()" id="btnReset">مسح الإجابات</button>
+        </div>
 
-function calculate(){
-let total=0;
-for(let i=0;i<questionsData.length;i++){
-total+=parseInt(document.getElementById("q"+i).value);
-}
+        <div class="resultBox" id="result">
+          <div class="scoreLine">
+            <div class="badge" id="badgeLevel">—</div>
+            <div id="scoreText">—</div>
+          </div>
+          <div class="progress"><div class="bar" id="progressBar"></div></div>
+          <div class="rec" id="recommendation"></div>
+        </div>
+      </div>
 
-let maxScore=questionsData.length*4;
-let percent=Math.round((total/maxScore)*100);
+      <!-- النتيجة / ملخص -->
+      <div class="panel">
+        <div class="sectionTitle" id="secResult">النتيجة</div>
+        <p class="sub" id="resultHint">
+          بعد الحساب ستظهر نسبة الجاهزية مع توصيات حسب نقاط الضعف + مراعاة احتياجات الأطفال وكبار السن وأصحاب الهمم.
+        </p>
+        <div style="height:10px"></div>
+        <div class="sectionTitle" id="secNote">ملاحظة</div>
+        <p class="sub" id="noteText">
+          هذا المؤشر توعوي ولا يغني عن تعليمات الجهات المختصة، لكنه يساعدك على ترتيب الأولويات بسرعة.
+        </p>
+      </div>
+    </div>
+  </div>
 
-let level="";
-let recommendation="";
+  <script>
+    // =========================
+    // 1) اللغات
+    // =========================
+    const i18n = {
+      ar: {
+        brand:"جاهز",
+        pageTitle:"قيّم جاهزيتك خلال دقيقة",
+        pageSub:"أجب بسرعة لتحصل على مؤشر جاهزية + توصيات عملية قابلة للتنفيذ.",
+        visit:"عدد الزيارات: ",
+        secSurvey:"الاستبيان",
+        secHome:"بيانات السكن",
+        lblHousingType:"نوع السكن",
+        lblArea:"المنطقة / المدينة",
+        lblResidents:"عدد القاطنين في المنزل",
+        lblSupplies:"مدة الاكتفاء (ماء + غذاء)",
+        chkKids:"يوجد أطفال (أقل من 5 سنوات)",
+        chkSeniors:"يوجد كبار سن (+65)",
+        chkDetermination:"يوجد شخص من أصحاب الهمم",
+        secQuestions:"أسئلة الجاهزية",
+        btnCalc:"احسب النتيجة",
+        btnReset:"مسح الإجابات",
+        secResult:"النتيجة",
+        resultHint:"بعد الحساب ستظهر نسبة الجاهزية مع توصيات حسب نقاط الضعف + مراعاة احتياجات الأطفال وكبار السن وأصحاب الهمم.",
+        secNote:"ملاحظة",
+        noteText:"هذا المؤشر توعوي ولا يغني عن تعليمات الجهات المختصة، لكنه يساعدك على ترتيب الأولويات بسرعة.",
+        // خيارات الأسئلة
+        opt0:"غير متوفر",
+        opt1:"ضعيف",
+        opt2:"متوسط",
+        opt3:"جيد",
+        opt4:"ممتاز",
+        // مستويات
+        levelLow:"مستوى الجاهزية منخفض",
+        levelMid:"مستوى الجاهزية متوسط",
+        levelHigh:"مستوى الجاهزية مرتفع",
+        // رسائل
+        msgFill:"رجاءً أجب على جميع الأسئلة قبل حساب النتيجة."
+      },
+      en: {
+        brand:"Ready",
+        pageTitle:"Assess your readiness in 1 minute",
+        pageSub:"Answer quickly to get a readiness score + actionable recommendations.",
+        visit:"Visits: ",
+        secSurvey:"Survey",
+        secHome:"Home details",
+        lblHousingType:"Housing type",
+        lblArea:"Area / City",
+        lblResidents:"Number of residents",
+        lblSupplies:"Supply duration (water + food)",
+        chkKids:"Kids present (under 5)",
+        chkSeniors:"Seniors present (65+)",
+        chkDetermination:"Person of determination present",
+        secQuestions:"Readiness questions",
+        btnCalc:"Calculate score",
+        btnReset:"Clear answers",
+        secResult:"Result",
+        resultHint:"After calculation you’ll see the score with recommendations based on weak points + tailored notes for kids/seniors/PoD.",
+        secNote:"Note",
+        noteText:"This is an awareness indicator and does not replace official guidance, but helps you prioritize quickly.",
+        opt0:"Not available",
+        opt1:"Weak",
+        opt2:"Average",
+        opt3:"Good",
+        opt4:"Excellent",
+        levelLow:"Low readiness",
+        levelMid:"Medium readiness",
+        levelHigh:"High readiness",
+        msgFill:"Please answer all questions before calculating."
+      }
+    };
 
-if(percent<40){
-level="مستوى الجاهزية منخفض";
-recommendation="ابدأ بوضع خطة مكتوبة وتجهيز أساسيات 72 ساعة فوراً.";
-}else if(percent<75){
-level="مستوى الجاهزية متوسط";
-recommendation="أنت على الطريق الصحيح، لكن تحتاج إلى تحسين بعض الجوانب.";
-}else{
-level="مستوى الجاهزية مرتفع";
-recommendation="ممتاز! حافظ على تحديث خطتك وتجهيزاتك بانتظام.";
-}
+    function setLang(lang){
+      localStorage.setItem("lang", lang);
+      const t = i18n[lang] || i18n.ar;
 
-document.getElementById("result").style.display="block";
-document.getElementById("scoreText").innerText=level+" ("+percent+"%)";
-let tips = [];
+      document.documentElement.lang = lang;
+      document.documentElement.dir  = (lang === "ar") ? "rtl" : "ltr";
 
-if (percent < 40) {
-  tips = [
-    "اكتب خطة طوارئ واضحة ومحدثة للأسرة.",
-    "جهّز حقيبة طوارئ تكفي 72 ساعة لكل فرد.",
-    "تأكد من وجود حقيبة إسعافات أولية مكتملة.",
-    "افحص صلاحية كاشف الدخان وطفاية الحريق.",
-    "حدد وسيلة تواصل بديلة عند انقطاع الشبكة."
-  ];
-} else if (percent < 75) {
-  tips = [
-    "حدّث خطة الطوارئ وحدد أدوار كل فرد.",
-    "راجع مخزون الماء والطعام كل 3 أشهر.",
-    "احتفظ بنسخ رقمية من الوثائق المهمة.",
-    "تأكد من شحن المصابيح والبطاريات الاحتياطية.",
-    "جرّب تدريبًا منزليًا لمحاكاة الطوارئ."
-  ];
-} else {
-  tips = [
-    "ممتاز، حافظ على تحديث خطة الطوارئ بانتظام.",
-    "افحص صلاحية التجهيزات كل فترة.",
-    "راجع خطتك مع الأسرة مرتين سنويًا."
-  ];
-}
+      document.getElementById("brandText").innerText = t.brand;
+      document.getElementById("pageTitle").innerText = t.pageTitle;
+      document.getElementById("pageSub").innerText = t.pageSub;
 
-document.getElementById("recommendation").innerHTML =
-  `<div style="font-weight:bold;margin-bottom:8px;">${recommendation}</div>
-   <div style="margin-top:10px;font-weight:bold;">توصيات عملية:</div>
-   <ul style="margin-top:8px;line-height:1.9;">
-     ${tips.map(t => `<li>${t}</li>`).join("")}
-   </ul>`;
-document.getElementById("progressBar").style.width=percent+"%";
-}
-</script>
-<script>
-const namespace = "emergency-readiness-uae";
-const key = "survey-visits";
+      // عداد الزيارات يتحدث لاحقاً (نحتفظ بالنص)
+      window.__visitPrefix = t.visit;
 
-if (!localStorage.getItem("visited")) {
-  fetch(`https://api.countapi.xyz/hit/${namespace}/${key}`)
-    .then(res => res.json())
-    .then(res => {
-      document.getElementById("visitCounter").innerText =
-        "عدد الزيارات: " + res.value;
-      localStorage.setItem("visited", "true");
-    });
-} else {
-  fetch(`https://api.countapi.xyz/get/${namespace}/${key}`)
-    .then(res => res.json())
-    .then(res => {
-      document.getElementById("visitCounter").innerText =
-        "عدد الزيارات: " + res.value;
-    });
-}
-</script>
-<script>
-function setLanguage(lang) {
+      document.getElementById("secSurvey").innerText = t.secSurvey;
+      document.getElementById("secHome").innerText = t.secHome;
+      document.getElementById("lblHousingType").innerText = t.lblHousingType;
+      document.getElementById("lblArea").innerText = t.lblArea;
+      document.getElementById("lblResidents").innerText = t.lblResidents;
+      document.getElementById("lblSupplies").innerText = t.lblSupplies;
 
-  if (lang === "en") {
-    document.documentElement.lang = "en";
-    document.documentElement.dir = "ltr";
+      document.getElementById("chkKids").innerText = t.chkKids;
+      document.getElementById("chkSeniors").innerText = t.chkSeniors;
+      document.getElementById("chkDetermination").innerText = t.chkDetermination;
 
-    document.querySelector("h1").innerText =
-      "Emergency Home Preparedness Survey";
+      document.getElementById("secQuestions").innerText = t.secQuestions;
+      document.getElementById("btnCalc").innerText = t.btnCalc;
+      document.getElementById("btnReset").innerText = t.btnReset;
 
-    document.getElementById("visitCounter").innerText =
-      "Total Visits: " + document.getElementById("visitCounter").innerText.replace("عدد الزيارات: ", "");
+      document.getElementById("secResult").innerText = t.secResult;
+      document.getElementById("resultHint").innerText = t.resultHint;
+      document.getElementById("secNote").innerText = t.secNote;
+      document.getElementById("noteText").innerText = t.noteText;
 
-  } else {
-    document.documentElement.lang = "ar";
-    document.documentElement.dir = "rtl";
+      renderQuestions();        // يعيد بناء الأسئلة بلغة جديدة
+      refreshVisitCounterOnly(); // يعيد عرض العداد بنص اللغة الحالية
+    }
 
-    document.querySelector("h1").innerText =
-      "استبيان جاهزية المنزل للطوارئ";
+    const currentLang = () => localStorage.getItem("lang") || "ar";
 
-    document.getElementById("visitCounter").innerText =
-      "عدد الزيارات: " + document.getElementById("visitCounter").innerText.replace("Total Visits: ", "");
-  }
-}
-</script>  
+    // =========================
+    // 2) الأسئلة (مختصرة أكثر)
+    // =========================
+    const questionsAR = [
+      "هل لديك خطة طوارئ مكتوبة؟",
+      "هل يعرف الجميع أدوارهم وقت الطوارئ؟",
+      "هل لديكم نقطة تجمع خارج المنزل؟",
+      "هل أرقام الطوارئ محفوظة؟",
+      "هل لديكم تواصل بديل عند انقطاع الشبكة؟",
+      "هل حقيبة/صندوق طوارئ يكفي 72 ساعة؟",
+      "هل ماء كافٍ لكل فرد 72 ساعة؟",
+      "هل طعام غير قابل للتلف متوفر؟",
+      "هل حقيبة إسعافات أولية مكتملة؟",
+      "هل مصابيح وبطاريات احتياطية متوفرة؟",
+      "هل كاشف الدخان يعمل؟",
+      "هل طفاية الحريق صالحة؟",
+      "هل تعرفون فصل الغاز والكهرباء؟",
+      "هل لديكم نسخ رقمية للوثائق المهمة؟"
+    ];
+
+    const questionsEN = [
+      "Do you have a written emergency plan?",
+      "Does everyone know their role?",
+      "Do you have an outdoor meeting point?",
+      "Are emergency numbers saved?",
+      "Do you have a backup communication plan?",
+      "Do you have a 72-hour emergency kit?",
+      "Enough water for 72 hours per person?",
+      "Non-perishable food available?",
+      "Complete first-aid kit?",
+      "Flashlights + spare batteries available?",
+      "Smoke detector working?",
+      "Fire extinguisher valid?",
+      "Know how to shut off gas/electricity?",
+      "Digital copies of important documents?"
+    ];
+
+    function getQuestions(){
+      return currentLang()==="en" ? questionsEN : questionsAR;
+    }
+
+    function getOptions(){
+      const t = i18n[currentLang()];
+      return [
+        {value:0, text:t.opt0},
+        {value:1, text:t.opt1},
+        {value:2, text:t.opt2},
+        {value:3, text:t.opt3},
+        {value:4, text:t.opt4},
+      ];
+    }
+
+    function renderQuestions(){
+      const questions = getQuestions();
+      const options = getOptions();
+      const container = document.getElementById("questions");
+      container.innerHTML = "";
+
+      questions.forEach((q, idx) => {
+        const i = idx + 1;
+        const box = document.createElement("div");
+        box.className = "q";
+
+        box.innerHTML = `
+          <div class="qHead">
+            <div>${i}. ${q}</div>
+          </div>
+          <select id="q-${i}">
+            ${options.map(o => `<option value="${o.value}">${o.text}</option>`).join("")}
+          </select>
+        `;
+        container.appendChild(box);
+      });
+    }
+
+    // =========================
+    // 3) الحساب + توصيات أذكى (تعتمد على نقاط الضعف + بيانات الأسرة)
+    // =========================
+    function calculate(){
+      const t = i18n[currentLang()];
+      const questions = getQuestions();
+
+      // جمع النقاط
+      let total = 0;
+      let weak = []; // أسئلة ضعيفة (0 أو 1)
+
+      for(let i=1; i<=questions.length; i++){
+        const v = parseInt(document.getElementById(`q-${i}`).value, 10);
+        total += v;
+        if(v <= 1) weak.push({index:i, text:questions[i-1], value:v});
+      }
+
+      const maxScore = questions.length * 4;
+      const percent = Math.round((total / maxScore) * 100);
+
+      // المستوى
+      let level = "";
+      let badge = "";
+      if(percent < 40){
+        level = t.levelLow;
+        badge = "تحتاج تحسين" ;
+      }else if(percent < 75){
+        level = t.levelMid;
+        badge = (currentLang()==="en") ? "Needs improvement" : "تحتاج تحسين";
+      }else{
+        level = t.levelHigh;
+        badge = (currentLang()==="en") ? "Excellent" : "ممتاز";
+      }
+
+      // توصيات أساسية
+      let recTitle = (currentLang()==="en")
+        ? "Actionable recommendations:"
+        : "توصيات عملية:";
+
+      // توصيات حسب نقاط الضعف
+      const tips = [];
+      const lang = currentLang();
+
+      function addTip(ar, en){ tips.push(lang==="en" ? en : ar); }
+
+      // خرائط بسيطة حسب رقم السؤال
+      const weakIdx = new Set(weak.map(x=>x.index));
+
+      if(weakIdx.has(1) || weakIdx.has(2) || weakIdx.has(3)){
+        addTip("اكتبوا خطة طوارئ مختصرة وحددوا الأدوار ونقطة التجمع، وراجعوها كل 3 أشهر.",
+               "Write a short emergency plan with roles + meeting point, and review every 3 months.");
+      }
+      if(weakIdx.has(4)){
+        addTip("احفظوا أرقام الطوارئ في الهاتف + ورقة مطبوعة داخل المنزل.",
+               "Save emergency numbers in phones + keep a printed list at home.");
+      }
+      if(weakIdx.has(5)){
+        addTip("حدّدوا وسيلة تواصل بديلة (SMS/واتساب عند عودة الشبكة/قريب موثوق) وخطة اتصال.",
+               "Define a backup communication method (SMS/when network returns/trusted contact).");
+      }
+      if(weakIdx.has(6) || weakIdx.has(7) || weakIdx.has(8)){
+        addTip("جهّزوا احتياجات 72 ساعة: ماء + غذاء + أدوات أساسية مع تواريخ صلاحية واضحة.",
+               "Build 72-hour supplies: water + food + basics with clear expiry tracking.");
+      }
+      if(weakIdx.has(9)){
+        addTip("حدّثوا حقيبة الإسعافات وأضيفوا مستلزمات أساسية (ضمادات/مطهر/مسكنات/قفازات).",
+               "Update your first-aid kit (bandages/antiseptic/pain relief/gloves).");
+      }
+      if(weakIdx.has(10)){
+        addTip("تأكدوا من توفر مصابيح وبطاريات وPower Bank مشحون دائماً.",
+               "Keep flashlights, spare batteries, and a charged power bank.");
+      }
+      if(weakIdx.has(11) || weakIdx.has(12)){
+        addTip("افحصوا كاشف الدخان وطفاية الحريق وتاريخ الصيانة/الانتهاء.",
+               "Check smoke detector + extinguisher and verify service/expiry dates.");
+      }
+      if(weakIdx.has(13)){
+        addTip("درّبوا أفراد الأسرة على فصل الغاز والكهرباء بأمان (مرة واحدة عملياً).",
+               "Train the household once on safely shutting off gas/electricity.");
+      }
+      if(weakIdx.has(14)){
+        addTip("احفظوا الوثائق المهمة رقمياً (هوية/جواز/تأمين) في مكان آمن + نسخة ورقية.",
+               "Store important documents digitally (ID/passport/insurance) + keep a paper backup.");
+      }
+
+      // تخصيص حسب بيانات الأسرة
+      const kids = document.getElementById("hasKids").checked;
+      const seniors = document.getElementById("hasSeniors").checked;
+      const pod = document.getElementById("hasDetermination").checked;
+
+      if(kids){
+        addTip("لوجود أطفال: أضيفوا (حليب/حفاضات/مناديل/أدوية بسيطة) ضمن حقيبة الطوارئ.",
+               "If kids are present: add diapers/wipes/formula/basic meds to the emergency kit.");
+      }
+      if(seniors){
+        addTip("لوجود كبار سن: تأكدوا من الأدوية اليومية + قائمة جرعات + رقم طبيب/مرافق.",
+               "If seniors are present: secure daily meds + dosage list + doctor/caregiver contact.");
+      }
+      if(pod){
+        addTip("لوجود أصحاب همم: جهّزوا احتياجات خاصة (أجهزة/بطاريات/مرافقة) وخطة خروج مناسبة.",
+               "If a person of determination is present: prepare special needs + suitable exit plan.");
+      }
+
+      // مدة الاكتفاء (ماء+غذاء)
+      const supplies = parseInt(document.getElementById("suppliesDuration").value,10);
+      if(supplies <= 1){
+        addTip("ارفعوا مخزون الماء والغذاء تدريجياً حتى 72 ساعة على الأقل.",
+               "Increase water/food stock progressively to at least 72 hours.");
+      }
+
+      // لو ما فيه tips كفاية
+      if(tips.length === 0){
+        addTip("حافظ على تحديث تجهيزاتك بشكل دوري وراجع الخطة كل فترة.",
+               "Keep your plan and supplies updated regularly.");
+      }
+
+      // عرض النتيجة
+      document.getElementById("result").style.display = "block";
+      document.getElementById("badgeLevel").innerText = badge;
+      document.getElementById("scoreText").innerText = `${level} (${percent}%)`;
+      document.getElementById("progressBar").style.width = percent + "%";
+
+      const html = `
+        <div style="font-weight:900;margin-bottom:6px;">${recTitle}</div>
+        <ul>${tips.map(x=>`<li>${escapeHtml(x)}</li>`).join("")}</ul>
+      `;
+      document.getElementById("recommendation").innerHTML = html;
+    }
+
+    function resetAll(){
+      // إعادة الضبط
+      document.getElementById("housingType").value = "";
+      document.getElementById("area").value = "";
+      document.getElementById("residents").value = "";
+      document.getElementById("suppliesDuration").value = "0";
+      document.getElementById("hasKids").checked = false;
+      document.getElementById("hasSeniors").checked = false;
+      document.getElementById("hasDetermination").checked = false;
+
+      // إجابات الأسئلة
+      const qCount = getQuestions().length;
+      for(let i=1; i<=qCount; i++){
+        const el = document.getElementById(`q-${i}`);
+        if(el) el.value = "0";
+      }
+
+      // إخفاء النتيجة
+      document.getElementById("result").style.display = "none";
+      document.getElementById("progressBar").style.width = "0%";
+      document.getElementById("recommendation").innerHTML = "";
+    }
+
+    function escapeHtml(str){
+      return String(str)
+        .replaceAll("&","&amp;")
+        .replaceAll("<","&lt;")
+        .replaceAll(">","&gt;")
+        .replaceAll('"',"&quot;")
+        .replaceAll("'","&#039;");
+    }
+
+    // =========================
+    // 4) CountAPI - عداد ظاهر للجميع
+    // =========================
+    const namespace = "emergency-readiness-uae";
+    const key = "survey-visits";
+
+    async function refreshVisitCounterOnly(){
+      // يعرض قيمة محفوظة إن وجدت
+      if(window.__lastVisits != null){
+        const prefix = window.__visitPrefix || (currentLang()==="en" ? "Visits: " : "عدد الزيارات: ");
+        document.getElementById("visitCounter").innerText = prefix + window.__lastVisits;
+      }
+    }
+
+    async function initCounter(){
+      try{
+        // يزيد الزيارة مرة واحدة لكل جهاز (حتى لا تتضخم بسرعة)
+        if(!localStorage.getItem("visited")){
+          const r = await fetch(`https://api.countapi.xyz/hit/${namespace}/${key}`);
+          const j = await r.json();
+          localStorage.setItem("visited","true");
+          window.__lastVisits = j.value;
+        }else{
+          const r = await fetch(`https://api.countapi.xyz/get/${namespace}/${key}`);
+          const j = await r.json();
+          window.__lastVisits = j.value;
+        }
+        refreshVisitCounterOnly();
+      }catch(e){
+        // لو فشل الـ API، نخفي الرقم بدل ما نكسر الصفحة
+        document.getElementById("visitCounter").style.display = "none";
+      }
+    }
+
+    // تشغيل
+    setLang(localStorage.getItem("lang") || "ar");
+    initCounter();
+  </script>
 </body>
 </html>
