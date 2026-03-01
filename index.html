@@ -1,120 +1,247 @@
+<!-- index.html -->
 <!DOCTYPE html>
 <html lang="ar" dir="rtl">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>جاهزية الاستعداد للطوارئ</title>
-
-<style>
-body{
-    margin:0;
-    font-family:Tahoma, sans-serif;
-    background:#f5f8fb;
-}
-
-.hero{
-    background:linear-gradient(135deg,#0f4c81,#1e88e5);
-    color:white;
-    text-align:center;
-    padding:90px 20px;
-}
-
-.hero h1{
-    font-size:40px;
-    margin-bottom:20px;
-}
-
-.hero p{
-    max-width:750px;
-    margin:auto;
-    font-size:18px;
-    line-height:1.6;
-}
-
-.btn{
-    display:inline-block;
-    margin-top:35px;
-    padding:15px 40px;
-    background:white;
-    color:#0f4c81;
-    text-decoration:none;
-    font-weight:bold;
-    border-radius:8px;
-    transition:0.3s;
-}
-
-.btn:hover{
-    background:#e3eef9;
-}
-
-.section{
-    padding:70px 20px;
-    text-align:center;
-}
-
-.features{
-    display:flex;
-    flex-wrap:wrap;
-    justify-content:center;
-    gap:25px;
-    margin-top:40px;
-}
-
-.card{
-    background:white;
-    width:260px;
-    padding:30px;
-    border-radius:12px;
-    box-shadow:0 8px 25px rgba(0,0,0,0.05);
-}
-
-.card h3{
-    color:#0f4c81;
-}
-
-.footer{
-    background:#0f1f2e;
-    color:white;
-    padding:25px;
-    text-align:center;
-}
-</style>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>هل منزلك مستعد للطوارئ؟</title>
+  <style>
+    :root{
+      --bg0:#070b12;
+      --bg1:#0b1220;
+      --panel:rgba(255,255,255,.06);
+      --panel2:rgba(255,255,255,.08);
+      --border:rgba(255,255,255,.10);
+      --text:#eaf0ff;
+      --muted:rgba(234,240,255,.72);
+      --accent:#66f0d0;      /* لمسة راحة */
+      --accent2:#6aa7ff;     /* أزرق مريح */
+      --shadow:0 24px 70px rgba(0,0,0,.45);
+      --radius:18px;
+    }
+    *{box-sizing:border-box}
+    body{
+      margin:0;
+      font-family:Tahoma, Arial, sans-serif;
+      color:var(--text);
+      background:
+        radial-gradient(900px 500px at 80% 15%, rgba(106,167,255,.20), transparent 55%),
+        radial-gradient(900px 500px at 20% 85%, rgba(102,240,208,.14), transparent 60%),
+        linear-gradient(180deg, var(--bg0), var(--bg1));
+      min-height:100vh;
+    }
+    .topbar{
+      position:sticky; top:0; z-index:10;
+      background:linear-gradient(180deg, rgba(11,18,32,.92), rgba(11,18,32,.68));
+      border-bottom:1px solid var(--border);
+      backdrop-filter: blur(10px);
+      padding:12px 16px;
+      display:flex;
+      justify-content:space-between;
+      align-items:center;
+      gap:12px;
+    }
+    .brand{
+      display:flex; align-items:center; gap:10px;
+      font-weight:700;
+      color:var(--text);
+      opacity:.95;
+      white-space:nowrap;
+    }
+    .brand .dot{
+      width:10px; height:10px; border-radius:999px;
+      background:linear-gradient(90deg,var(--accent),var(--accent2));
+      box-shadow:0 0 22px rgba(102,240,208,.35);
+    }
+    .lang{
+      display:flex; gap:8px; align-items:center;
+    }
+    .btn{
+      border:1px solid var(--border);
+      background:rgba(255,255,255,.06);
+      color:var(--text);
+      padding:8px 12px;
+      border-radius:999px;
+      cursor:pointer;
+      font-weight:700;
+      transition:.2s ease;
+    }
+    .btn:hover{ background:rgba(255,255,255,.10) }
+    .btn.primary{
+      border:none;
+      background:linear-gradient(90deg,var(--accent2),var(--accent));
+      color:#06101d;
+      box-shadow:0 10px 30px rgba(106,167,255,.18);
+    }
+    .wrap{
+      max-width:1000px;
+      margin:0 auto;
+      padding:34px 16px 60px;
+    }
+    .hero{
+      border:1px solid var(--border);
+      background:linear-gradient(180deg, rgba(255,255,255,.06), rgba(255,255,255,.04));
+      border-radius:var(--radius);
+      box-shadow:var(--shadow);
+      padding:34px 18px;
+      text-align:center;
+    }
+    h1{
+      margin:0 0 12px;
+      font-size:42px;
+      letter-spacing:.2px;
+      line-height:1.15;
+    }
+    .sub{
+      margin:0 auto 18px;
+      max-width:720px;
+      color:var(--muted);
+      font-size:18px;
+      line-height:1.8;
+    }
+    .ctaRow{
+      display:flex;
+      justify-content:center;
+      gap:12px;
+      flex-wrap:wrap;
+      margin-top:14px;
+    }
+    a.cta{
+      text-decoration:none;
+      display:inline-block;
+    }
+    .cardsTitle{
+      margin:34px 0 14px;
+      text-align:center;
+      font-size:26px;
+      font-weight:800;
+    }
+    .cards{
+      display:grid;
+      grid-template-columns:repeat(3, 1fr);
+      gap:14px;
+    }
+    .card{
+      border:1px solid var(--border);
+      background:rgba(255,255,255,.05);
+      border-radius:16px;
+      padding:18px 16px;
+      box-shadow:0 16px 40px rgba(0,0,0,.25);
+      min-height:140px;
+    }
+    .card h3{ margin:0 0 8px; font-size:18px }
+    .card p{ margin:0; color:var(--muted); line-height:1.7; font-size:14.5px }
+    .footer{
+      margin-top:26px;
+      text-align:center;
+      color:rgba(234,240,255,.55);
+      font-size:12.5px;
+    }
+    @media (max-width:900px){
+      h1{font-size:34px}
+      .cards{grid-template-columns:1fr}
+      .hero{padding:28px 16px}
+    }
+  </style>
 </head>
-
 <body>
+  <div class="topbar">
+    <div class="brand"><span class="dot"></span><span id="brandText">جاهز</span></div>
+    <div class="lang">
+      <button class="btn" onclick="setLang('ar')">AR</button>
+      <button class="btn" onclick="setLang('en')">EN</button>
+      <a class="cta" href="survey.html"><button class="btn primary" id="topCta">ابدأ التقييم</button></a>
+    </div>
+  </div>
 
-<div class="hero">
-<h1>هل منزلك مستعد للطوارئ؟</h1>
-<p>قيّم مستوى جاهزية أسرتك خلال دقائق واحصل على توصيات عملية لتحسين التخطيط والتجهيز والاستعداد للأزمات.</p>
-<a href="survey.html" class="btn">ابدأ التقييم الآن</a>
-</div>
+  <div class="wrap">
+    <div class="hero">
+      <h1 id="hTitle">هل منزلك مستعد للطوارئ؟</h1>
+      <p class="sub" id="hSub">
+        قيّم جاهزية أسرتك خلال دقائق واحصل على مؤشر جاهزية + توصيات عملية لتحسين التخطيط والتجهيز والاستعداد للأزمات.
+      </p>
+      <div class="ctaRow">
+        <a class="cta" href="survey.html"><button class="btn primary" id="ctaMain">ابدأ التقييم الآن</button></a>
+        <a class="cta" href="survey.html#why"><button class="btn" id="ctaSecondary">ماذا يقيس الاستبيان؟</button></a>
+      </div>
+    </div>
 
-<div class="section">
-<h2>ماذا يقيس الاستبيان؟</h2>
+    <div class="cardsTitle" id="cardsTitle">ماذا يقيس الاستبيان؟</div>
 
-<div class="features">
+    <div class="cards" id="cards">
+      <div class="card">
+        <h3 id="c1t">التخطيط</h3>
+        <p id="c1p">وجود خطة طوارئ واضحة (أدوار – نقاط تجمع – أرقام مهمة).</p>
+      </div>
+      <div class="card">
+        <h3 id="c2t">التجهيزات</h3>
+        <p id="c2p">مدى توفر احتياجات 72 ساعة (ماء – غذاء – إسعافات – بطاريات).</p>
+      </div>
+      <div class="card">
+        <h3 id="c3t">التواصل</h3>
+        <p id="c3p">خطة تواصل بديلة عند انقطاع الشبكة، ومعرفة مسارات الخروج.</p>
+      </div>
+    </div>
 
-<div class="card">
-<h3>التخطيط الأسري</h3>
-<p>وجود خطة واضحة للتعامل مع الحالات الطارئة.</p>
-</div>
+    <div class="footer" id="foot">© 2026 جاهزية الاستعداد للطوارئ السكنية</div>
+  </div>
 
-<div class="card">
-<h3>التجهيزات الأساسية</h3>
-<p>مدى توفر احتياجات 72 ساعة في المنزل.</p>
-</div>
+  <script>
+    const i18n = {
+      ar: {
+        brand: "جاهز",
+        title: "هل منزلك مستعد للطوارئ؟",
+        sub: "قيّم جاهزية أسرتك خلال دقائق واحصل على مؤشر جاهزية + توصيات عملية لتحسين التخطيط والتجهيز والاستعداد للأزمات.",
+        topCta: "ابدأ التقييم",
+        ctaMain: "ابدأ التقييم الآن",
+        ctaSecondary: "ماذا يقيس الاستبيان؟",
+        cardsTitle: "ماذا يقيس الاستبيان؟",
+        c1t:"التخطيط", c1p:"وجود خطة طوارئ واضحة (أدوار – نقاط تجمع – أرقام مهمة).",
+        c2t:"التجهيزات", c2p:"مدى توفر احتياجات 72 ساعة (ماء – غذاء – إسعافات – بطاريات).",
+        c3t:"التواصل", c3p:"خطة تواصل بديلة عند انقطاع الشبكة، ومعرفة مسارات الخروج.",
+        foot:"© 2026 جاهزية الاستعداد للطوارئ السكنية"
+      },
+      en: {
+        brand: "Ready",
+        title: "Is your home emergency-ready?",
+        sub: "Assess your household readiness in minutes and get a readiness score + practical recommendations to improve planning and preparedness.",
+        topCta: "Start",
+        ctaMain: "Start Assessment",
+        ctaSecondary: "What does it measure?",
+        cardsTitle: "What does it measure?",
+        c1t:"Planning", c1p:"A clear emergency plan (roles, meeting points, key numbers).",
+        c2t:"Supplies", c2p:"72-hour essentials (water, food, first aid, batteries).",
+        c3t:"Communication", c3p:"Backup communication plan and knowing exit routes.",
+        foot:"© 2026 Residential Emergency Readiness"
+      }
+    };
 
-<div class="card">
-<h3>التواصل أثناء الأزمات</h3>
-<p>جاهزية الأسرة للاتصال والتنسيق عند انقطاع الشبكات.</p>
-</div>
+    function setLang(lang){
+      localStorage.setItem("lang", lang);
+      const t = i18n[lang] || i18n.ar;
 
-</div>
-</div>
+      document.documentElement.lang = lang;
+      document.documentElement.dir  = (lang === "ar") ? "rtl" : "ltr";
 
-<div class="footer">
-© 2026 جاهزية الاستعداد للطوارئ السكنية
-</div>
+      document.getElementById("brandText").innerText = t.brand;
+      document.getElementById("hTitle").innerText = t.title;
+      document.getElementById("hSub").innerText = t.sub;
+      document.getElementById("topCta").innerText = t.topCta;
+      document.getElementById("ctaMain").innerText = t.ctaMain;
+      document.getElementById("ctaSecondary").innerText = t.ctaSecondary;
+      document.getElementById("cardsTitle").innerText = t.cardsTitle;
 
+      document.getElementById("c1t").innerText = t.c1t;
+      document.getElementById("c1p").innerText = t.c1p;
+      document.getElementById("c2t").innerText = t.c2t;
+      document.getElementById("c2p").innerText = t.c2p;
+      document.getElementById("c3t").innerText = t.c3t;
+      document.getElementById("c3p").innerText = t.c3p;
+
+      document.getElementById("foot").innerText = t.foot;
+    }
+
+    setLang(localStorage.getItem("lang") || "ar");
+  </script>
 </body>
 </html>
