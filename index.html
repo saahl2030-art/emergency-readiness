@@ -1,0 +1,990 @@
+<!doctype html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>استبيان جاهزية الاستعداد للطوارئ السكنية | Home Emergency Preparedness Readiness</title>
+  <meta name="description" content="استبيان إلكتروني قصير (12–15 سؤال) يقيس جاهزية الاستعداد للطوارئ السكنية ويحسب النتيجة تلقائياً مع توصيات." />
+
+  <style>
+    :root{
+      --bg:#f6f8fb;
+      --card:#ffffff;
+      --text:#0f172a;
+      --muted:#475569;
+      --border:#e2e8f0;
+      --accent:#0b5ed7;
+      --accent2:#0ea5e9;
+      --good:#15803d;
+      --mid:#a16207;
+      --low:#b91c1c;
+      --shadow: 0 8px 22px rgba(2,6,23,.08);
+      --radius: 14px;
+      --maxw: 980px;
+      --focus: 0 0 0 3px rgba(14,165,233,.25);
+      --font: system-ui, -apple-system, "Segoe UI", Roboto, Arial, "Noto Kufi Arabic", "Noto Sans Arabic", sans-serif;
+    }
+
+    * { box-sizing: border-box; }
+    body{
+      margin:0;
+      font-family: var(--font);
+      background: radial-gradient(1200px 800px at 10% 0%, rgba(14,165,233,.12), transparent 60%),
+                  radial-gradient(900px 600px at 100% 20%, rgba(11,94,215,.10), transparent 55%),
+                  var(--bg);
+      color: var(--text);
+    }
+
+    a { color: var(--accent); text-decoration: none; }
+    a:hover { text-decoration: underline; }
+
+    .topbar{
+      background: linear-gradient(90deg, #0b5ed7, #0ea5e9);
+      color:#fff;
+      padding: 18px 16px;
+      border-bottom: 1px solid rgba(255,255,255,.18);
+    }
+    .wrap{ max-width: var(--maxw); margin: 0 auto; padding: 0 16px; }
+
+    .brand{
+      display:flex; align-items:center; justify-content: space-between; gap:12px;
+    }
+
+    .brand-left{ display:flex; align-items:center; gap:12px; }
+    .seal{
+      width:44px; height:44px; border-radius: 12px;
+      background: rgba(255,255,255,.18);
+      display:grid; place-items:center;
+      border: 1px solid rgba(255,255,255,.28);
+      box-shadow: 0 10px 18px rgba(0,0,0,.08);
+      flex: 0 0 auto;
+    }
+    .seal svg{ width:26px; height:26px; opacity:.95; }
+    .titleblock{ line-height: 1.15; }
+    .h1{ margin:0; font-size: 18px; font-weight: 800; letter-spacing:.2px; }
+    .sub{ margin:6px 0 0 0; opacity:.92; font-size: 13px; }
+
+    .controls{
+      display:flex; gap:10px; align-items:center; flex-wrap: wrap;
+      justify-content:flex-end;
+    }
+    .btn{
+      appearance:none; border: 1px solid rgba(255,255,255,.35);
+      background: rgba(255,255,255,.16);
+      color:#fff; padding:10px 12px; border-radius: 12px;
+      cursor:pointer; font-weight: 700; font-size: 13px;
+      transition: transform .06s ease, background .2s ease, border-color .2s ease;
+      user-select:none;
+    }
+    .btn:hover{ background: rgba(255,255,255,.22); }
+    .btn:active{ transform: translateY(1px); }
+    .pill{
+      background: rgba(255,255,255,.16);
+      border: 1px solid rgba(255,255,255,.30);
+      border-radius: 999px;
+      padding: 8px 12px;
+      font-size: 13px;
+      display:flex; align-items:center; gap:10px;
+    }
+    .pill strong{ font-variant-numeric: tabular-nums; }
+
+    main{ padding: 18px 0 34px; }
+    .grid{
+      display:grid;
+      grid-template-columns: 1.15fr .85fr;
+      gap: 16px;
+      align-items: start;
+    }
+    @media (max-width: 980px){
+      .grid{ grid-template-columns: 1fr; }
+      .controls{ justify-content:flex-start; }
+    }
+
+    .card{
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+      overflow: hidden;
+    }
+    .card-h{
+      padding: 14px 16px;
+      border-bottom: 1px solid var(--border);
+      background: linear-gradient(180deg, rgba(11,94,215,.06), transparent);
+      display:flex; align-items:center; justify-content: space-between; gap: 10px;
+    }
+    .card-h h2{
+      margin:0; font-size: 15px; font-weight: 900;
+    }
+    .card-b{ padding: 14px 16px; }
+
+    .note{
+      color: var(--muted);
+      font-size: 13px;
+      line-height: 1.5;
+      margin: 0;
+    }
+
+    .req{
+      display:inline-flex; align-items:center; gap:6px;
+      font-size: 12px;
+      color: #0f172a;
+      background: #eef2ff;
+      border: 1px solid #e0e7ff;
+      padding: 6px 10px;
+      border-radius: 999px;
+      font-weight: 800;
+    }
+
+    form{ margin: 0; }
+    .q{
+      padding: 14px 0;
+      border-bottom: 1px dashed var(--border);
+    }
+    .q:last-of-type{ border-bottom: none; }
+
+    .qhead{
+      display:flex; align-items:flex-start; justify-content: space-between; gap:10px;
+      margin-bottom: 10px;
+    }
+    .qtitle{
+      margin:0;
+      font-size: 14px;
+      font-weight: 900;
+      line-height: 1.35;
+    }
+    .qmeta{
+      display:flex; align-items:center; gap:8px; flex: 0 0 auto;
+    }
+    .badge{
+      font-size: 12px;
+      padding: 6px 10px;
+      border-radius: 999px;
+      background: #f1f5f9;
+      border: 1px solid var(--border);
+      color: #0f172a;
+      font-weight: 800;
+      white-space: nowrap;
+    }
+
+    .scale{
+      display:grid;
+      grid-template-columns: repeat(5, minmax(0, 1fr));
+      gap: 10px;
+    }
+    @media (max-width: 560px){
+      .scale{ grid-template-columns: 1fr; }
+    }
+    .opt{
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 10px;
+      display:flex;
+      gap:10px;
+      align-items: flex-start;
+      background: #fff;
+      cursor:pointer;
+      transition: border-color .2s ease, box-shadow .2s ease, transform .06s ease;
+      min-height: 48px;
+    }
+    .opt:hover{ border-color: #cbd5e1; }
+    .opt:active{ transform: translateY(1px); }
+    input[type="radio"]{
+      margin-top: 2px;
+      accent-color: var(--accent);
+      cursor:pointer;
+      flex: 0 0 auto;
+    }
+    .opt span{
+      font-size: 13px;
+      color: var(--text);
+      font-weight: 700;
+      line-height: 1.25;
+    }
+    .opt small{
+      display:block;
+      font-size: 12px;
+      color: var(--muted);
+      font-weight: 600;
+      margin-top: 3px;
+      line-height: 1.25;
+    }
+
+    .line{
+      display:flex; gap:10px; align-items:center; flex-wrap: wrap;
+      margin-top: 14px;
+    }
+    .checkbox{
+      display:flex; gap:10px; align-items:flex-start;
+      border: 1px solid var(--border);
+      background: #fbfdff;
+      border-radius: 12px;
+      padding: 12px;
+    }
+    .checkbox input{ margin-top: 3px; accent-color: var(--accent); }
+    .checkbox label{
+      font-size: 13px; line-height: 1.5; color: var(--text);
+      font-weight: 700;
+    }
+    .checkbox label em{ font-style: normal; color: var(--muted); font-weight: 600; }
+
+    .actions{
+      display:flex;
+      gap: 10px;
+      flex-wrap: wrap;
+      margin-top: 14px;
+    }
+    .primary{
+      border: 1px solid rgba(11,94,215,.25);
+      background: linear-gradient(180deg, rgba(11,94,215,.98), rgba(14,165,233,.98));
+      color:#fff;
+      padding: 12px 14px;
+      border-radius: 12px;
+      cursor:pointer;
+      font-weight: 900;
+      font-size: 14px;
+      letter-spacing: .2px;
+      transition: transform .06s ease, filter .15s ease;
+    }
+    .primary:hover{ filter: brightness(1.03); }
+    .primary:active{ transform: translateY(1px); }
+    .ghost{
+      border: 1px solid var(--border);
+      background: #fff;
+      color: var(--text);
+      padding: 12px 14px;
+      border-radius: 12px;
+      cursor:pointer;
+      font-weight: 900;
+      font-size: 14px;
+    }
+
+    .result{
+      display:none;
+      margin-top: 12px;
+      border-top: 1px solid var(--border);
+      padding-top: 14px;
+    }
+    .scorebox{
+      border-radius: 14px;
+      border: 1px solid var(--border);
+      overflow: hidden;
+      background: #fff;
+    }
+    .scoretop{
+      padding: 12px 12px;
+      display:flex; justify-content: space-between; align-items:center; gap:10px;
+      border-bottom: 1px solid var(--border);
+      background: linear-gradient(180deg, rgba(2,6,23,.03), transparent);
+    }
+    .scoretop strong{ font-size: 13px; }
+    .level{
+      display:inline-flex; gap:8px; align-items:center;
+      padding: 8px 10px;
+      border-radius: 999px;
+      border: 1px solid var(--border);
+      background: #f8fafc;
+      font-weight: 900;
+      font-size: 13px;
+    }
+    .dot{
+      width:10px; height:10px; border-radius: 999px;
+      background: var(--mid);
+    }
+    .bar{
+      height: 10px;
+      background: #eef2f7;
+      position: relative;
+    }
+    .fill{
+      position:absolute; inset:0 auto 0 0;
+      width: 0%;
+      background: linear-gradient(90deg, rgba(11,94,215,1), rgba(14,165,233,1));
+      transition: width .5s ease;
+    }
+    .scorebody{
+      padding: 12px;
+    }
+    .big{
+      font-size: 34px;
+      font-weight: 1000;
+      letter-spacing: -0.5px;
+      margin: 0;
+      font-variant-numeric: tabular-nums;
+    }
+    .muted{ color: var(--muted); margin: 6px 0 0 0; font-size: 13px; }
+
+    .recs{
+      margin-top: 12px;
+      border: 1px solid var(--border);
+      border-radius: 14px;
+      background: #fff;
+      overflow:hidden;
+    }
+    .recs h3{
+      margin:0;
+      padding: 12px;
+      border-bottom: 1px solid var(--border);
+      font-size: 14px;
+      font-weight: 1000;
+      background: linear-gradient(180deg, rgba(14,165,233,.06), transparent);
+    }
+    .recs ul{
+      margin:0;
+      padding: 10px 18px 14px;
+      line-height: 1.55;
+      color: var(--text);
+      font-size: 13px;
+      font-weight: 650;
+    }
+    .recs li{ margin: 7px 0; }
+
+    .aside-item{
+      padding: 12px 14px;
+      border-bottom: 1px solid var(--border);
+    }
+    .aside-item:last-child{ border-bottom: none; }
+    .kpi{
+      display:flex; justify-content: space-between; align-items:center; gap:10px;
+    }
+    .kpi strong{ font-size: 13px; }
+    .kpi span{ font-variant-numeric: tabular-nums; font-weight: 1000; }
+    .small{
+      font-size: 12px;
+      color: var(--muted);
+      line-height: 1.5;
+      margin-top: 6px;
+    }
+
+    .footer{
+      margin-top: 12px;
+      font-size: 12px;
+      color: var(--muted);
+      line-height: 1.55;
+    }
+
+    /* focus */
+    button:focus, input:focus, a:focus { outline: none; box-shadow: var(--focus); border-radius: 10px; }
+
+    /* LTR tweaks */
+    [dir="ltr"] .brand { flex-direction: row; }
+    [dir="ltr"] .qhead { flex-direction: row; }
+    [dir="ltr"] .fill{ inset:0 0 0 auto; } /* will be overridden via JS for correct direction */
+  </style>
+</head>
+
+<body>
+  <header class="topbar">
+    <div class="wrap">
+      <div class="brand">
+        <div class="brand-left">
+          <div class="seal" aria-hidden="true" title="Official">
+            <!-- Simple emblem-like icon -->
+            <svg viewBox="0 0 24 24" fill="none">
+              <path d="M12 2l7 4v6c0 5-3 9-7 10C8 21 5 17 5 12V6l7-4z" stroke="white" stroke-width="1.6"/>
+              <path d="M9.5 12.2l1.6 1.8 3.6-4.2" stroke="white" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+          </div>
+          <div class="titleblock">
+            <p class="h1" data-i18n="title">استبيان جاهزية الاستعداد للطوارئ السكنية</p>
+            <p class="sub" data-i18n="subtitle">قصير — إلزامي — نتيجة فورية مع توصيات احترافية</p>
+          </div>
+        </div>
+
+        <div class="controls">
+          <div class="pill" aria-live="polite" title="User counter">
+            <span data-i18n="usersCount">عدد المستخدمين:</span>
+            <strong id="userCount">—</strong>
+          </div>
+          <button class="btn" id="langBtn" type="button">English</button>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <main class="wrap">
+    <div class="grid">
+      <!-- FORM -->
+      <section class="card">
+        <div class="card-h">
+          <h2 data-i18n="formHeader">الأسئلة (إجاباتك سرية محلياً ولا تُرسل لأي خادم)</h2>
+          <span class="req" data-i18n="requiredTag">كل الأسئلة إلزامية</span>
+        </div>
+
+        <div class="card-b">
+          <p class="note" data-i18n="intro">
+            هذا الاستبيان يقيس جاهزية المنزل للطوارئ عبر محاور: الخطة، التجهيزات، التواصل، السلامة، واستمرارية الحياة الأساسية.
+            النتيجة تقديرية للتوعية وليست بديلاً عن تعليمات الجهات المختصة.
+          </p>
+
+          <form id="survey" novalidate>
+            <div id="questions"></div>
+
+            <div class="line">
+              <div class="checkbox" style="width:100%">
+                <input type="checkbox" id="commit" required />
+                <label for="commit" data-i18n="commitment">
+                  أُقرّ بالالتزام بإرشادات <strong>الهيئة الوطنية لإدارة الطوارئ والأزمات والكوارث (NCEMA)</strong> والتقيد بالتوجيهات الرسمية عند وقوع أي طارئ.
+                  <em>يمكنك الرجوع إلى أدلة وإرشادات NCEMA الرسمية.</em>
+                </label>
+              </div>
+            </div>
+
+            <div class="actions">
+              <button class="primary" type="submit" data-i18n="calcBtn">احسب الجاهزية</button>
+              <button class="ghost" type="button" id="resetBtn" data-i18n="resetBtn">إعادة ضبط</button>
+            </div>
+
+            <div class="result" id="result">
+              <div class="scorebox">
+                <div class="scoretop">
+                  <strong data-i18n="resultHeader">نتيجة الجاهزية</strong>
+                  <div class="level" id="levelBadge">
+                    <span class="dot" id="levelDot"></span>
+                    <span id="levelText">—</span>
+                  </div>
+                </div>
+                <div class="bar" aria-hidden="true"><div class="fill" id="fill"></div></div>
+                <div class="scorebody">
+                  <p class="big"><span id="score">0</span>%</p>
+                  <p class="muted" id="scoreExplain" data-i18n="scoreExplain">تم احتساب النتيجة بناءً على إجاباتك عبر 5 مستويات لكل سؤال.</p>
+                </div>
+              </div>
+
+              <div class="recs">
+                <h3 data-i18n="recsHeader">توصيات عملية حسب مستواك</h3>
+                <ul id="recsList"></ul>
+              </div>
+
+              <p class="footer" data-i18n="footer">
+                ملاحظة: هذا التقييم للتوعية العامة. عند الطوارئ اتبع دائماً الإرشادات الرسمية الصادرة عن الجهات المختصة.
+              </p>
+            </div>
+          </form>
+        </div>
+      </section>
+
+      <!-- ASIDE -->
+      <aside class="card">
+        <div class="card-h">
+          <h2 data-i18n="asideHeader">ملخص سريع</h2>
+          <span class="badge" id="qCountBadge">—</span>
+        </div>
+        <div class="card-b" style="padding:0">
+          <div class="aside-item">
+            <div class="kpi">
+              <strong data-i18n="kpi1">عدد الأسئلة</strong>
+              <span id="kpiQ">—</span>
+            </div>
+            <div class="small" data-i18n="kpi1sub">12–15 سؤال — قياس سريع دون تعقيد.</div>
+          </div>
+
+          <div class="aside-item">
+            <div class="kpi">
+              <strong data-i18n="kpi2">آلية الاحتساب</strong>
+              <span>0–4</span>
+            </div>
+            <div class="small" data-i18n="kpi2sub">كل سؤال يُقيّم بخمس درجات (غير متوفر → متوفر بالكامل).</div>
+          </div>
+
+          <div class="aside-item">
+            <div class="kpi">
+              <strong data-i18n="kpi3">تصنيف النتيجة</strong>
+              <span id="kpiLevels">—</span>
+            </div>
+            <div class="small" data-i18n="kpi3sub">منخفض / متوسط / مرتفع مع توصيات جاهزة.</div>
+          </div>
+
+          <div class="aside-item">
+            <div class="kpi">
+              <strong data-i18n="kpi4">مؤشر المستخدمين</strong>
+              <span id="kpiUsers">—</span>
+            </div>
+            <div class="small" data-i18n="kpi4sub">
+              عدّاد بسيط عبر خدمة CountAPI (بدون قاعدة بيانات). يمكن استبداله أو تعطيله.
+            </div>
+          </div>
+
+          <div class="aside-item">
+            <div class="small" data-i18n="ncemaRef">
+              مرجع رسمي: موقع NCEMA ودليل "Your Guide for Emergencies" (إرشادات تجهيز حقيبة الطوارئ والتصرف أثناء الأزمات).
+              :contentReference[oaicite:0]{index=0}
+            </div>
+          </div>
+        </div>
+      </aside>
+    </div>
+  </main>
+
+  <script>
+    /***********************
+     * Bilingual content
+     ***********************/
+    const I18N = {
+      ar: {
+        dir: "rtl",
+        langBtn: "English",
+        title: "استبيان جاهزية الاستعداد للطوارئ السكنية",
+        subtitle: "قصير — إلزامي — نتيجة فورية مع توصيات احترافية",
+        usersCount: "عدد المستخدمين:",
+        formHeader: "الأسئلة (إجاباتك سرية محلياً ولا تُرسل لأي خادم)",
+        requiredTag: "كل الأسئلة إلزامية",
+        intro: "هذا الاستبيان يقيس جاهزية المنزل للطوارئ عبر محاور: الخطة، التجهيزات، التواصل، السلامة، واستمرارية الحياة الأساسية. النتيجة تقديرية للتوعية وليست بديلاً عن تعليمات الجهات المختصة.",
+        commitment: "أُقرّ بالالتزام بإرشادات <strong>الهيئة الوطنية لإدارة الطوارئ والأزمات والكوارث (NCEMA)</strong> والتقيد بالتوجيهات الرسمية عند وقوع أي طارئ. <em>يمكنك الرجوع إلى أدلة وإرشادات NCEMA الرسمية.</em>",
+        calcBtn: "احسب الجاهزية",
+        resetBtn: "إعادة ضبط",
+        resultHeader: "نتيجة الجاهزية",
+        scoreExplain: "تم احتساب النتيجة بناءً على إجاباتك عبر 5 مستويات لكل سؤال.",
+        recsHeader: "توصيات عملية حسب مستواك",
+        footer: "ملاحظة: هذا التقييم للتوعية العامة. عند الطوارئ اتبع دائماً الإرشادات الرسمية الصادرة عن الجهات المختصة.",
+        asideHeader: "ملخص سريع",
+        kpi1: "عدد الأسئلة",
+        kpi1sub: "12–15 سؤال — قياس سريع دون تعقيد.",
+        kpi2: "آلية الاحتساب",
+        kpi2sub: "كل سؤال يُقيّم بخمس درجات (غير متوفر → متوفر بالكامل).",
+        kpi3: "تصنيف النتيجة",
+        kpi3sub: "منخفض / متوسط / مرتفع مع توصيات جاهزة.",
+        kpi4: "مؤشر المستخدمين",
+        kpi4sub: "عدّاد بسيط عبر خدمة CountAPI (بدون قاعدة بيانات). يمكن استبداله أو تعطيله.",
+        ncemaRef: 'مرجع رسمي: موقع NCEMA ودليل "Your Guide for Emergencies" (إرشادات تجهيز حقيبة الطوارئ والتصرف أثناء الأزمات).',
+
+        // scale labels
+        scale: [
+          { t:"غير متوفر", d:"لا يوجد/غير مطبق" },
+          { t:"ضعيف", d:"موجود جزئياً" },
+          { t:"متوسط", d:"موجود لكن يحتاج تحسين" },
+          { t:"جيد", d:"موجود بشكل جيد" },
+          { t:"ممتاز", d:"مكتمل ومحدّث" },
+        ],
+
+        // result levels
+        levelLow: "منخفض",
+        levelMid: "متوسط",
+        levelHigh: "مرتفع",
+
+        // questions
+        questions: [
+          { id:"q1", title:"هل لديك خطة طوارئ مكتوبة للأسرة (أدوار، نقاط تجمع، خطوات واضحة)؟", tag:"الخطة" },
+          { id:"q2", title:"هل يعرف جميع أفراد الأسرة رقم الطوارئ وكيفية التواصل عند انقطاع الشبكات؟", tag:"التواصل" },
+          { id:"q3", title:"هل تملك حقيبة/صندوق طوارئ يحتوي أساسيات 72 ساعة (ماء، طعام، إضاءة، بطاريات)؟", tag:"التجهيزات" },
+          { id:"q4", title:"هل لديك أدوية أساسية ونسخ من الوصفات الطبية تكفي عدة أيام (خصوصاً للحالات المزمنة)؟", tag:"الصحة" },
+          { id:"q5", title:"هل لديك حقيبة إسعافات أولية ومعرفة أساسية بكيفية استخدامها؟", tag:"السلامة" },
+          { id:"q6", title:"هل خزّنت ماءً بكمية مناسبة أو لديك وسيلة بديلة آمنة للحصول على الماء عند الطوارئ؟", tag:"المياه" },
+          { id:"q7", title:"هل لديك طفاية حريق صالحة وكاشف دخان/إنذار يعمل وتم اختبارهما مؤخراً؟", tag:"الحريق" },
+          { id:"q8", title:"هل تعرف كيف تفصل الكهرباء/الغاز/الماء بأمان عند الحاجة؟", tag:"المرافق" },
+          { id:"q9", title:"هل لديك قائمة محدثة بأرقام الطوارئ والجهات المهمة ومشاركتها مع الأسرة؟", tag:"التواصل" },
+          { id:"q10", title:"هل تحفظ الوثائق المهمة (هويات، عقود، تأمين) بنسخ ورقية/رقمية في مكان آمن ويسهل الوصول له؟", tag:"الوثائق" },
+          { id:"q11", title:"هل لديك خطة إخلاء للمبنى/المنزل (مساران على الأقل) وتم شرحها للأسرة؟", tag:"الإخلاء" },
+          { id:"q12", title:"هل لديك مصدر إضاءة احتياطي (كشافات/مصابيح) وشاحن طاقة (Power Bank) مشحون؟", tag:"الطاقة" },
+          { id:"q13", title:"هل تتابع التحذيرات الرسمية (رسائل تنبيه/قنوات رسمية) وتعرف ماذا تفعل عند صدورها؟", tag:"الإنذار" },
+          { id:"q14", title:"هل راعيت احتياجات الفئات الخاصة (أطفال/كبار سن/أصحاب همم/حيوانات أليفة) ضمن خطة الطوارئ؟", tag:"الأسرة" }
+        ],
+
+        // recommendations by level
+        recs: {
+          low: [
+            "ابدأ فوراً بخطة طوارئ مكتوبة للأسرة (أدوار + نقطة تجمع + أرقام تواصل بديلة).",
+            "جهّز حقيبة طوارئ 72 ساعة: ماء، طعام غير قابل للتلف، مصباح، بطاريات، شاحن متنقل، راديو إن توفر.",
+            "ثبّت/افحص كاشف الدخان وطفاية الحريق، وتأكد من صلاحية الطفاية وطريقة الاستخدام.",
+            "جهّز إسعافات أولية وأدوية أساسية ونسخ الوصفات الطبية خصوصاً للحالات المزمنة.",
+            "احفظ الوثائق المهمة بنسخة رقمية آمنة ونسخة ورقية في ملف مقاوم للماء.",
+            "تابع التحذيرات الرسمية فقط، وحدد قناة بديلة للتواصل عند تعطل الشبكة."
+          ],
+          mid: [
+            "حدّث خطة الطوارئ وجرّبها سريعاً (تمرين إخلاء أسري 10 دقائق كل 3 أشهر).",
+            "أكمِل نواقص حقيبة 72 ساعة وراجع تواريخ الصلاحية شهرياً.",
+            "راجع إجراءات فصل الكهرباء/الغاز/الماء وتأكد أن أفراد الأسرة يعرفونها.",
+            "حسّن استمرارية الطاقة: Power Bank إضافي، وشواحن، وبطاريات احتياطية.",
+            "رتّب أرقام الطوارئ في ورقة مطبوعة داخل المنزل + نسخة على الهاتف.",
+            "أضف ترتيبات للفئات الخاصة والحيوانات الأليفة ضمن الخطة."
+          ],
+          high: [
+            "حافظ على الجاهزية عبر مراجعة شهرية سريعة (صلاحيات، شحن، نقص المواد).",
+            "نفّذ تدريباً مختصراً للأسرة كل 6 أشهر وتأكد من وضوح الأدوار ونقاط التجمع.",
+            "راجع المخاطر الخاصة بسكنك (حريق/سيول/انقطاع كهرباء) وحدّث الخطة وفقها.",
+            "عزّز السلامة: فحص كاشفات الدخان وطفايات الحريق حسب الجدول، وتثقيف الأسرة.",
+            "استمر بمتابعة القنوات الرسمية وتجنّب تداول الشائعات وقت الأزمات.",
+            "فكر في مساعدة الجيران/كبار السن عبر مشاركة قائمة إرشادات مختصرة."
+          ]
+        }
+      },
+
+      en: {
+        dir: "ltr",
+        langBtn: "العربية",
+        title: "Home Emergency Preparedness Readiness Survey",
+        subtitle: "Short — Mandatory — Instant score with professional recommendations",
+        usersCount: "Users:",
+        formHeader: "Questions (Your answers stay local and are not sent to any server)",
+        requiredTag: "All questions are mandatory",
+        intro: "This survey measures household emergency readiness across planning, supplies, communication, safety, and basic continuity. The result is an awareness indicator and not a substitute for official instructions.",
+        commitment: "I commit to follow the guidance of the <strong>National Emergency, Crisis and Disaster Management Authority (NCEMA)</strong> and comply with official directives during any emergency. <em>You can refer to NCEMA’s official guides.</em>",
+        calcBtn: "Calculate readiness",
+        resetBtn: "Reset",
+        resultHeader: "Readiness result",
+        scoreExplain: "The score is calculated using a 5-level scale for each question.",
+        recsHeader: "Actionable recommendations for your level",
+        footer: "Note: This is for public awareness. In an emergency, always follow official instructions issued by competent authorities.",
+        asideHeader: "Quick summary",
+        kpi1: "Number of questions",
+        kpi1sub: "12–15 questions — fast assessment.",
+        kpi2: "Scoring",
+        kpi2sub: "Each question is rated on five levels (Not available → Fully available).",
+        kpi3: "Score classification",
+        kpi3sub: "Low / Medium / High with ready recommendations.",
+        kpi4: "User counter",
+        kpi4sub: "Simple counter via CountAPI (no database). You can replace or disable it.",
+        ncemaRef: 'Official reference: NCEMA website and "Your Guide for Emergencies" (emergency kit and what to do during crises).',
+
+        scale: [
+          { t:"Not available", d:"Not in place" },
+          { t:"Weak", d:"Partially in place" },
+          { t:"Medium", d:"In place but needs improvement" },
+          { t:"Good", d:"In place" },
+          { t:"Excellent", d:"Complete and up to date" },
+        ],
+
+        levelLow: "Low",
+        levelMid: "Medium",
+        levelHigh: "High",
+
+        questions: [
+          { id:"q1", title:"Do you have a written family emergency plan (roles, meeting point, clear steps)?", tag:"Plan" },
+          { id:"q2", title:"Does every family member know emergency numbers and how to communicate if networks fail?", tag:"Comms" },
+          { id:"q3", title:"Do you have a 72-hour emergency kit (water, non-perishables, light, batteries)?", tag:"Supplies" },
+          { id:"q4", title:"Do you have essential medicines and copies of prescriptions (especially for chronic conditions)?", tag:"Health" },
+          { id:"q5", title:"Do you have a first aid kit and basic knowledge to use it?", tag:"Safety" },
+          { id:"q6", title:"Do you store enough water or have a safe backup way to access water in emergencies?", tag:"Water" },
+          { id:"q7", title:"Do you have a working fire extinguisher and smoke alarm, tested recently?", tag:"Fire" },
+          { id:"q8", title:"Do you know how to safely shut off electricity/gas/water if needed?", tag:"Utilities" },
+          { id:"q9", title:"Do you have an updated list of emergency and critical contacts shared with the family?", tag:"Comms" },
+          { id:"q10", title:"Are important documents (IDs, contracts, insurance) backed up digitally/physically and easy to access?", tag:"Docs" },
+          { id:"q11", title:"Do you have a home/building evacuation plan (at least 2 routes) explained to the family?", tag:"Evac" },
+          { id:"q12", title:"Do you have backup lighting and a charged power bank available?", tag:"Power" },
+          { id:"q13", title:"Do you follow official alerts and know what actions to take when they are issued?", tag:"Alerts" },
+          { id:"q14", title:"Did you include special needs (kids/elderly/people of determination/pets) in your plan?", tag:"Family" }
+        ],
+
+        recs: {
+          low: [
+            "Create a written family plan now (roles + meeting point + alternative contact method).",
+            "Build a 72-hour kit: water, non-perishables, flashlight, batteries, power bank, radio if available.",
+            "Install/test smoke alarms and ensure your fire extinguisher is valid and you know how to use it.",
+            "Prepare first aid and essential medicines, including prescription copies for chronic cases.",
+            "Back up critical documents (digital + water-protected physical copy).",
+            "Rely on official alerts only and agree on a fallback communication channel."
+          ],
+          mid: [
+            "Update your plan and run a quick drill (10-minute family evacuation drill every 3 months).",
+            "Complete missing items in the 72-hour kit and review expiry dates monthly.",
+            "Review how to shut off utilities and ensure family members can do it safely.",
+            "Improve power continuity: extra power bank, chargers, spare batteries.",
+            "Print emergency contacts and keep a copy at home + on phones.",
+            "Add provisions for special needs and pets into the plan."
+          ],
+          high: [
+            "Maintain readiness with a short monthly check (expiry dates, charge status, missing items).",
+            "Run a brief family drill every 6 months and confirm roles/meeting points are clear.",
+            "Review risks specific to your residence (fire/flood/power outage) and adjust the plan accordingly.",
+            "Keep safety strong: smoke alarm checks and extinguisher servicing on schedule; educate the family.",
+            "Stick to official channels and avoid misinformation during crises.",
+            "Consider supporting neighbors/elderly by sharing a simple preparedness checklist."
+          ]
+        }
+      }
+    };
+
+    /***********************
+     * Configuration
+     ***********************/
+    // Classification thresholds
+    const THRESH = { lowMax: 39.99, midMax: 70.0 }; // <40 low, 40–70 mid, >70 high
+
+    // CountAPI (global) - replace namespace/key with your own to avoid collisions:
+    // https://countapi.xyz/
+    const COUNTAPI_NAMESPACE = "uae-emergency-readiness";
+    const COUNTAPI_KEY = "github-pages";
+    const USE_COUNTAPI = true; // set false to disable and fallback to local only
+
+    /***********************
+     * State
+     ***********************/
+    let currentLang = "ar";
+
+    const el = (id) => document.getElementById(id);
+    const qs = (sel, root=document) => root.querySelector(sel);
+    const qsa = (sel, root=document) => Array.from(root.querySelectorAll(sel));
+
+    function setLang(lang){
+      currentLang = lang;
+      const dict = I18N[lang];
+      document.documentElement.lang = lang;
+      document.documentElement.dir = dict.dir;
+
+      // Update button label
+      el("langBtn").textContent = dict.langBtn;
+
+      // Apply text nodes with data-i18n
+      qsa("[data-i18n]").forEach(node=>{
+        const key = node.getAttribute("data-i18n");
+        if(dict[key] !== undefined) node.innerHTML = dict[key];
+      });
+
+      // Rebuild questions to enforce required and correct labels
+      buildQuestions();
+      updateAside();
+
+      // Keep result section consistent if already visible
+      if(el("result").style.display === "block"){
+        // re-render level label + recs using stored score
+        const score = Number(el("score").textContent || 0);
+        renderResult(score);
+      }
+
+      // Fix progress bar direction behavior
+      syncBarDirection();
+    }
+
+    function syncBarDirection(){
+      const dir = document.documentElement.dir;
+      const fill = el("fill");
+      if(dir === "rtl"){
+        fill.style.left = "auto";
+        fill.style.right = "0";
+      }else{
+        fill.style.right = "auto";
+        fill.style.left = "0";
+      }
+    }
+
+    /***********************
+     * Build questions
+     ***********************/
+    function buildQuestions(){
+      const dict = I18N[currentLang];
+      const container = el("questions");
+      container.innerHTML = "";
+
+      dict.questions.forEach((q, idx)=>{
+        const block = document.createElement("div");
+        block.className = "q";
+        block.setAttribute("role", "group");
+        block.setAttribute("aria-labelledby", `${q.id}-label`);
+
+        const head = document.createElement("div");
+        head.className = "qhead";
+
+        const title = document.createElement("p");
+        title.className = "qtitle";
+        title.id = `${q.id}-label`;
+        title.textContent = `${idx+1}. ${q.title}`;
+
+        const meta = document.createElement("div");
+        meta.className = "qmeta";
+        const tag = document.createElement("span");
+        tag.className = "badge";
+        tag.textContent = q.tag;
+        meta.appendChild(tag);
+
+        head.appendChild(title);
+        head.appendChild(meta);
+
+        const scale = document.createElement("div");
+        scale.className = "scale";
+
+        dict.scale.forEach((s, val)=>{
+          const label = document.createElement("label");
+          label.className = "opt";
+
+          const input = document.createElement("input");
+          input.type = "radio";
+          input.name = q.id;
+          input.value = String(val);
+          input.required = true;
+
+          const textWrap = document.createElement("div");
+          const span = document.createElement("span");
+          span.textContent = s.t;
+          const small = document.createElement("small");
+          small.textContent = s.d;
+
+          textWrap.appendChild(span);
+          textWrap.appendChild(small);
+
+          label.appendChild(input);
+          label.appendChild(textWrap);
+          scale.appendChild(label);
+        });
+
+        block.appendChild(head);
+        block.appendChild(scale);
+        container.appendChild(block);
+      });
+    }
+
+    function updateAside(){
+      const dict = I18N[currentLang];
+      const n = dict.questions.length;
+      el("kpiQ").textContent = String(n);
+      el("qCountBadge").textContent = `${n}`;
+      el("kpiLevels").textContent = currentLang === "ar" ? "منخفض/متوسط/مرتفع" : "Low/Medium/High";
+      el("kpiUsers").textContent = el("userCount").textContent || "—";
+    }
+
+    /***********************
+     * Scoring
+     ***********************/
+    function getScorePercent(){
+      const dict = I18N[currentLang];
+      const n = dict.questions.length;
+      const max = 4 * n;
+      let sum = 0;
+
+      for(const q of dict.questions){
+        const checked = qs(`input[name="${q.id}"]:checked`);
+        if(!checked) return null; // not complete
+        sum += Number(checked.value);
+      }
+
+      const pct = (sum / max) * 100;
+      return Math.round(pct * 10) / 10; // 1 decimal
+    }
+
+    function classify(pct){
+      if(pct <= THRESH.lowMax) return "low";
+      if(pct <= THRESH.midMax) return "mid";
+      return "high";
+    }
+
+    function renderResult(pct){
+      const dict = I18N[currentLang];
+
+      el("score").textContent = String(pct);
+
+      const cls = classify(pct);
+
+      const levelText = (cls==="low") ? dict.levelLow : (cls==="mid" ? dict.levelMid : dict.levelHigh);
+      el("levelText").textContent = levelText;
+
+      // Dot color + badge color semantics
+      const dot = el("levelDot");
+      const badge = el("levelBadge");
+
+      const root = getComputedStyle(document.documentElement);
+      const low = root.getPropertyValue("--low").trim();
+      const mid = root.getPropertyValue("--mid").trim();
+      const good = root.getPropertyValue("--good").trim();
+
+      let col = mid;
+      if(cls==="low") col = low;
+      if(cls==="high") col = good;
+
+      dot.style.background = col;
+      badge.style.borderColor = "rgba(15,23,42,.10)";
+      badge.style.background = "rgba(248,250,252,.9)";
+
+      // Progress bar
+      const fill = el("fill");
+      fill.style.width = `${Math.max(0, Math.min(100, pct))}%`;
+      syncBarDirection();
+
+      // Recommendations
+      const list = el("recsList");
+      list.innerHTML = "";
+      const recsArr = dict.recs[cls];
+      recsArr.forEach(item=>{
+        const li = document.createElement("li");
+        li.textContent = item;
+        list.appendChild(li);
+      });
+
+      el("result").style.display = "block";
+      updateAside();
+      el("result").scrollIntoView({ behavior: "smooth", block: "start" });
+    }
+
+    function resetAll(){
+      el("survey").reset();
+      el("result").style.display = "none";
+      el("fill").style.width = "0%";
+    }
+
+    /***********************
+     * User Counter
+     ***********************/
+    async function updateUserCount(){
+      // 1) local-only fallback
+      const LOCAL_KEY = "emergency_readiness_visits";
+      const local = Number(localStorage.getItem(LOCAL_KEY) || "0") + 1;
+      localStorage.setItem(LOCAL_KEY, String(local));
+
+      // 2) try global count via CountAPI (no backend)
+      // Note: This is a public counter. If you want privacy/ownership, use your own backend.
+      if(!USE_COUNTAPI){
+        el("userCount").textContent = String(local);
+        updateAside();
+        return;
+      }
+
+      try{
+        const url = `https://api.countapi.xyz/hit/${encodeURIComponent(COUNTAPI_NAMESPACE)}/${encodeURIComponent(COUNTAPI_KEY)}`;
+        const res = await fetch(url, { method: "GET" });
+        if(!res.ok) throw new Error("CountAPI failed");
+        const data = await res.json();
+        el("userCount").textContent = String(data.value);
+      }catch(e){
+        // fallback to local count if network blocked
+        el("userCount").textContent = String(local);
+      }
+      updateAside();
+    }
+
+    /***********************
+     * Events
+     ***********************/
+    el("langBtn").addEventListener("click", ()=>{
+      setLang(currentLang === "ar" ? "en" : "ar");
+    });
+
+    el("resetBtn").addEventListener("click", resetAll);
+
+    el("survey").addEventListener("submit", (ev)=>{
+      ev.preventDefault();
+
+      // Built-in constraint validation (ensures all radios + commitment checkbox are checked)
+      if(!el("survey").checkValidity()){
+        el("survey").reportValidity();
+        return;
+      }
+
+      const pct = getScorePercent();
+      if(pct === null){
+        el("survey").reportValidity();
+        return;
+      }
+
+      renderResult(pct);
+    });
+
+    /***********************
+     * Init
+     ***********************/
+    (function init(){
+      setLang("ar");         // default Arabic
+      updateUserCount();     // update counter
+    })();
+  </script>
+
+  <!--
+    نشر على GitHub Pages (مختصر):
+    1) أنشئ مستودع جديد على GitHub.
+    2) ارفع هذا الملف باسم index.html في الجذر.
+    3) Settings → Pages → Deploy from branch → main / root.
+    4) سيتم نشره كرابط GitHub Pages تلقائياً.
+
+    ملاحظة مرجعية:
+    - الهيئة الوطنية لإدارة الطوارئ والأزمات والكوارث (NCEMA) - موقع رسمي ودليل "Your Guide for Emergencies".
+    :contentReference[oaicite:1]{index=1}
+  -->
+</body>
+</html>
