@@ -3,95 +3,106 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>استبيان جاهزية الاستعداد للطوارئ السكنية</title>
-
+<title>استبيان جاهزية المنزل للطوارئ</title>
 <style>
-body{
-    font-family: Tahoma, sans-serif;
-    margin:0;
-    background:#f4f7fa;
-}
-
-.container{
-    max-width:800px;
-    margin:50px auto;
-    background:white;
-    padding:40px;
-    border-radius:10px;
-    box-shadow:0 5px 20px rgba(0,0,0,0.05);
-}
-
-h1{
-    text-align:center;
-    color:#1e73be;
-}
-
-.question{
-    margin-top:30px;
-}
-
-button{
-    background:#1e73be;
-    color:white;
-    padding:12px 25px;
-    border:none;
-    border-radius:6px;
-    cursor:pointer;
-    margin-top:30px;
-}
-
-.result{
-    margin-top:30px;
-    font-size:18px;
-    font-weight:bold;
-}
+body{margin:0;font-family:Tahoma, sans-serif;background:#f5f8fb;}
+.container{max-width:900px;margin:40px auto;background:#fff;padding:30px;border-radius:12px;box-shadow:0 8px 25px rgba(0,0,0,.08)}
+h1{text-align:center;color:#0f4c81}
+.question{margin-bottom:25px}
+.question h3{margin-bottom:10px;color:#333}
+select{width:100%;padding:8px;border-radius:6px;border:1px solid #ccc}
+button{background:#0f4c81;color:#fff;padding:12px 20px;border:none;border-radius:8px;cursor:pointer;margin-top:20px}
+button:hover{background:#0b3b63}
+.result{margin-top:25px;padding:15px;border-radius:8px;background:#eef4fa}
+.progress{height:18px;background:#ddd;border-radius:20px;margin-top:15px;overflow:hidden}
+.progress-bar{height:100%;background:#0f4c81;width:0%;transition:.5s}
 </style>
 </head>
-
 <body>
 
 <div class="container">
 <h1>استبيان جاهزية المنزل للطوارئ</h1>
 
-<div class="question">
-<p>هل لديك خطة طوارئ مكتوبة للأسرة؟</p>
-<select id="q1">
-<option value="0">لا</option>
-<option value="1">نعم جزئياً</option>
-<option value="2">نعم بالكامل</option>
-</select>
+<form id="surveyForm">
+
+<div id="questions"></div>
+
+<button type="button" onclick="calculate()">احسب النتيجة</button>
+
+<div class="result" id="result" style="display:none;">
+<h3 id="scoreText"></h3>
+<div class="progress"><div class="progress-bar" id="progressBar"></div></div>
+<p id="recommendation"></p>
 </div>
 
-<div class="question">
-<p>هل لديك صندوق طوارئ يكفي 72 ساعة؟</p>
-<select id="q2">
-<option value="0">لا</option>
-<option value="1">نعم جزئياً</option>
-<option value="2">نعم بالكامل</option>
-</select>
-</div>
-
-<button onclick="calculate()">احسب النتيجة</button>
-
-<div class="result" id="result"></div>
+</form>
 </div>
 
 <script>
+const questionsData = [
+"هل لديك خطة طوارئ مكتوبة للأسرة؟",
+"هل يعرف جميع أفراد الأسرة أدوارهم وقت الطوارئ؟",
+"هل لديكم نقطة تجمع محددة خارج المنزل؟",
+"هل لديكم أرقام الطوارئ محفوظة؟",
+"هل لديكم وسيلة اتصال بديلة عند انقطاع الشبكة؟",
+"هل لديك صندوق طوارئ يكفي 72 ساعة؟",
+"هل يتوفر ماء كافٍ لكل فرد لمدة 72 ساعة؟",
+"هل لديك مواد غذائية غير قابلة للتلف؟",
+"هل توجد حقيبة إسعافات أولية مكتملة؟",
+"هل لديك مصابيح وبطاريات احتياطية؟",
+"هل لديك كاشف دخان يعمل؟",
+"هل لديك طفاية حريق صالحة؟",
+"هل تعرف كيفية فصل الغاز والكهرباء؟",
+"هل تحتفظ بنسخ رقمية من الوثائق المهمة؟"
+];
+
+const options = [
+{value:0,text:"غير متوفر"},
+{value:1,text:"ضعيف"},
+{value:2,text:"متوسط"},
+{value:3,text:"جيد"},
+{value:4,text:"ممتاز"}
+];
+
+const questionsContainer = document.getElementById("questions");
+
+questionsData.forEach((q,index)=>{
+let div=document.createElement("div");
+div.className="question";
+let html=`<h3>${index+1}. ${q}</h3><select id="q${index}">`;
+options.forEach(o=>{html+=`<option value="${o.value}">${o.text}</option>`});
+html+=`</select>`;
+div.innerHTML=html;
+questionsContainer.appendChild(div);
+});
+
 function calculate(){
-    let q1 = parseInt(document.getElementById("q1").value);
-    let q2 = parseInt(document.getElementById("q2").value);
-    let total = q1 + q2;
+let total=0;
+for(let i=0;i<questionsData.length;i++){
+total+=parseInt(document.getElementById("q"+i).value);
+}
 
-    let message = "";
-    if(total <= 1){
-        message = "مستوى الجاهزية منخفض – ينصح بالبدء فوراً بالتجهيز.";
-    }else if(total == 2){
-        message = "مستوى الجاهزية متوسط – هناك مجال للتحسين.";
-    }else{
-        message = "مستوى الجاهزية جيد – أحسنت الاستعداد.";
-    }
+let maxScore=questionsData.length*4;
+let percent=Math.round((total/maxScore)*100);
 
-    document.getElementById("result").innerText = message;
+let level="";
+let recommendation="";
+
+if(percent<40){
+level="مستوى الجاهزية منخفض";
+recommendation="ابدأ بوضع خطة مكتوبة وتجهيز أساسيات 72 ساعة فوراً.";
+}else if(percent<75){
+level="مستوى الجاهزية متوسط";
+recommendation="أنت على الطريق الصحيح، لكن تحتاج إلى تحسين بعض الجوانب.";
+}else{
+level="مستوى الجاهزية مرتفع";
+recommendation="ممتاز! حافظ على تحديث خطتك وتجهيزاتك بانتظام.";
+}
+
+document.getElementById("result").style.display="block";
+document.getElementById("scoreText").innerText=level+" ("+percent+"%)";
+document.getElementById("recommendation").innerText=recommendation;
+document.getElementById("progressBar").style.width=percent+"%";
 }
 </script>
 
