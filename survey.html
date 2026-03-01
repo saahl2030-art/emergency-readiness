@@ -19,7 +19,13 @@ button:hover{background:#0b3b63}
 </style>
 </head>
 <body>
-
+  <div style="text-align:left; padding:10px;">
+  <button onclick="setLanguage('ar')">AR</button>
+  <button onclick="setLanguage('en')">EN</button>
+</div>
+<div id="visitCounter" style="text-align:center; margin:12px 0; font-weight:700;">
+  عدد الزيارات: ...
+</div>
 <div class="container">
 <h1>استبيان جاهزية المنزل للطوارئ</h1>
 
@@ -136,6 +142,51 @@ document.getElementById("recommendation").innerHTML =
 document.getElementById("progressBar").style.width=percent+"%";
 }
 </script>
+<script>
+const namespace = "emergency-readiness-uae";
+const key = "survey-visits";
 
+if (!localStorage.getItem("visited")) {
+  fetch(`https://api.countapi.xyz/hit/${namespace}/${key}`)
+    .then(res => res.json())
+    .then(res => {
+      document.getElementById("visitCounter").innerText =
+        "عدد الزيارات: " + res.value;
+      localStorage.setItem("visited", "true");
+    });
+} else {
+  fetch(`https://api.countapi.xyz/get/${namespace}/${key}`)
+    .then(res => res.json())
+    .then(res => {
+      document.getElementById("visitCounter").innerText =
+        "عدد الزيارات: " + res.value;
+    });
+}
+</script>
+<script>
+function setLanguage(lang) {
+
+  if (lang === "en") {
+    document.documentElement.lang = "en";
+    document.documentElement.dir = "ltr";
+
+    document.querySelector("h1").innerText =
+      "Emergency Home Preparedness Survey";
+
+    document.getElementById("visitCounter").innerText =
+      "Total Visits: " + document.getElementById("visitCounter").innerText.replace("عدد الزيارات: ", "");
+
+  } else {
+    document.documentElement.lang = "ar";
+    document.documentElement.dir = "rtl";
+
+    document.querySelector("h1").innerText =
+      "استبيان جاهزية المنزل للطوارئ";
+
+    document.getElementById("visitCounter").innerText =
+      "عدد الزيارات: " + document.getElementById("visitCounter").innerText.replace("Total Visits: ", "");
+  }
+}
+</script>  
 </body>
 </html>
