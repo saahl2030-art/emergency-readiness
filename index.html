@@ -1,3 +1,4 @@
+<!-- index.html -->
 <!DOCTYPE html>
 <html lang="ar" dir="rtl">
 <head>
@@ -8,13 +9,12 @@
   <style>
     :root{
       --bg:#071420;
-      --bg2:#0a1d2e;
+      --bg2:#091a2a;
       --card:rgba(255,255,255,.06);
-      --card2:rgba(255,255,255,.08);
       --border:rgba(255,255,255,.10);
       --text:#eaf4ff;
-      --muted:rgba(234,244,255,.70);
-      --accent:#34d399;     /* تركواز مريح */
+      --muted:rgba(234,244,255,.72);
+      --accent:#34d399;     /* أخضر-تركواز مريح */
       --accent2:#60a5fa;    /* أزرق مريح */
       --shadow:0 24px 70px rgba(0,0,0,.45);
       --radius:18px;
@@ -25,8 +25,8 @@
       font-family: Tahoma, Arial, sans-serif;
       color:var(--text);
       background:
-        radial-gradient(900px 520px at 20% 15%, rgba(96,165,250,.22), transparent 60%),
-        radial-gradient(900px 520px at 85% 75%, rgba(52,211,153,.18), transparent 62%),
+        radial-gradient(900px 520px at 20% 15%, rgba(96,165,250,.20), transparent 60%),
+        radial-gradient(900px 520px at 85% 75%, rgba(52,211,153,.16), transparent 62%),
         linear-gradient(180deg, var(--bg), var(--bg2));
       min-height:100vh;
     }
@@ -40,17 +40,14 @@
     }
     .brand{
       display:flex; align-items:center; gap:10px;
-      font-weight:900;
-      white-space:nowrap;
+      font-weight:900; white-space:nowrap;
     }
     .dot{
       width:10px; height:10px; border-radius:999px;
       background: linear-gradient(90deg, var(--accent2), var(--accent));
-      box-shadow: 0 0 26px rgba(52,211,153,.28);
+      box-shadow: 0 0 26px rgba(52,211,153,.26);
     }
-    .lang{
-      display:flex; gap:8px; align-items:center;
-    }
+    .lang{ display:flex; gap:8px; align-items:center; }
     .btn{
       border:1px solid var(--border);
       background: rgba(255,255,255,.06);
@@ -68,7 +65,6 @@
       color:#062033;
       box-shadow: 0 12px 30px rgba(96,165,250,.14);
     }
-
     .wrap{ max-width:1050px; margin:0 auto; padding:28px 16px 64px; }
     .hero{
       border:1px solid var(--border);
@@ -78,12 +74,7 @@
       padding:32px 18px;
       text-align:center;
     }
-    h1{
-      margin:0 0 10px;
-      font-size:44px;
-      line-height:1.1;
-      letter-spacing:.2px;
-    }
+    h1{ margin:0 0 10px; font-size:44px; line-height:1.1; letter-spacing:.2px; }
     .sub{
       margin:0 auto 16px;
       max-width:760px;
@@ -91,13 +82,9 @@
       font-size:18px;
       line-height:1.9;
     }
-
     .kpis{
-      display:flex;
-      justify-content:center;
-      gap:10px;
-      flex-wrap:wrap;
-      margin: 10px 0 0;
+      display:flex; justify-content:center;
+      gap:10px; flex-wrap:wrap; margin: 10px 0 0;
     }
     .pill{
       border:1px solid var(--border);
@@ -110,16 +97,12 @@
       white-space:nowrap;
     }
     .pill b{ color: var(--text); }
-
     .ctaRow{
-      display:flex;
-      justify-content:center;
-      gap:12px;
-      flex-wrap:wrap;
+      display:flex; justify-content:center;
+      gap:12px; flex-wrap:wrap;
       margin-top:18px;
     }
     a{ text-decoration:none; }
-
     .grid{
       margin-top:18px;
       display:grid;
@@ -136,7 +119,6 @@
     }
     .card h3{ margin:0 0 8px; font-size:18px; }
     .card p{ margin:0; color:var(--muted); line-height:1.8; font-size:14.5px; }
-
     .footer{
       margin-top:22px;
       text-align:center;
@@ -144,7 +126,6 @@
       font-size:12.5px;
       line-height:1.7;
     }
-
     @media (max-width:980px){
       h1{ font-size:34px; }
       .grid{ grid-template-columns:1fr; }
@@ -170,7 +151,7 @@
       </p>
 
       <div class="kpis">
-        <div class="pill" id="kpiQ"><b>14</b> سؤال</div>
+        <div class="pill" id="kpiQ"><b id="qCount">10</b> أسئلة</div>
         <div class="pill" id="kpiTime">المدة: <b>1–2</b> دقيقة</div>
         <div class="pill" id="kpiVisits">الزيارات الحالية: <b id="visitsNow">…</b></div>
       </div>
@@ -188,7 +169,7 @@
       </div>
       <div class="card">
         <h3 id="c2t">التجهيزات</h3>
-        <p id="c2p">ماء وغذاء 72 ساعة + إسعافات + مصابيح وبطاريات.</p>
+        <p id="c2p">ماء وغذاء 72 ساعة + إسعافات + مصباح وبطاريات.</p>
       </div>
       <div class="card">
         <h3 id="c3t">السلامة</h3>
@@ -205,6 +186,7 @@
     // ====== CountAPI (Landing shows current count only - no increment) ======
     const namespace = "emergency-readiness-uae";
     const key = "survey-visits";
+
     async function loadVisits(){
       try{
         const r = await fetch(`https://api.countapi.xyz/get/${namespace}/${key}`);
@@ -225,19 +207,19 @@
         ctaMain:"ابدأ التقييم الآن",
         ctaSecondary:"عرض النتيجة والتوصيات",
         c1t:"التخطيط", c1p:"خطة طوارئ، أدوار واضحة، ونقطة تجمع.",
-        c2t:"التجهيزات", c2p:"ماء وغذاء 72 ساعة + إسعافات + مصابيح وبطاريات.",
+        c2t:"التجهيزات", c2p:"ماء وغذاء 72 ساعة + إسعافات + مصباح وبطاريات.",
         c3t:"السلامة", c3p:"كاشف دخان، طفاية، ومعرفة فصل الغاز والكهرباء.",
         foot:"هذه الأداة توعوية وتدعم الاستعداد المنزلي بشكل منظم، وليست بديلاً عن تعليمات الجهات الرسمية."
       },
       en:{
         brand:"Ready",
         title:"Ready for emergencies?",
-        sub:"A quick, clear assessment of your family’s preparedness, with practical recommendations tailored to your home needs.",
+        sub:"A quick, clear check of your family preparedness, with practical recommendations based on your answers.",
         topCta:"Start",
         ctaMain:"Start Assessment",
         ctaSecondary:"See results & tips",
-        c1t:"Planning", c1p:"An emergency plan, clear roles, and a meeting point.",
-        c2t:"Supplies", c2p:"72-hour water/food + first aid + lights & batteries.",
+        c1t:"Planning", c1p:"Emergency plan, clear roles, and a meeting point.",
+        c2t:"Supplies", c2p:"72-hour water/food + first aid + light & batteries.",
         c3t:"Safety", c3p:"Smoke detector, extinguisher, and shut-off knowledge.",
         foot:"This tool is for awareness and does not replace official guidance."
       }
