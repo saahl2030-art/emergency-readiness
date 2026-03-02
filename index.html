@@ -203,30 +203,62 @@
   </div>
 
   <script>
+    // =========================
     // CountAPI - Total visits (increase once per session)
+    // =========================
     const namespace = "emergency-readiness-uae";
     const key = "total-visits";
 
+    function setVisitsValue(val){
+      const el = document.getElementById("visitsNow");
+      if(!el) return;
+      el.innerText = (typeof val === "number") ? val : "—";
+    }
+
+    async function fetchWithTimeout(url, ms=4500){
+      const controller = new AbortController();
+      const timer = setTimeout(() => controller.abort(), ms);
+      try{
+        const res = await fetch(url, { cache:"no-store", signal: controller.signal });
+        return res;
+      } finally {
+        clearTimeout(timer);
+      }
+    }
+
     async function updateTotalVisits(){
       const counted = sessionStorage.getItem("counted_total") === "1";
-      try{
-        const url = counted
-          ? `https://api.countapi.xyz/get/${namespace}/${key}`
-          : `https://api.countapi.xyz/hit/${namespace}/${key}`;
 
-        const r = await fetch(url, { cache: "no-store" });
+      const safeNS  = encodeURIComponent(namespace);
+      const safeKey = encodeURIComponent(key);
+
+      const url = counted
+        ? `https://api.countapi.xyz/get/${safeNS}/${safeKey}`
+        : `https://api.countapi.xyz/hit/${safeNS}/${safeKey}`;
+
+      try{
+        const r = await fetchWithTimeout(url, 4500);
         const j = await r.json();
 
         if(!counted) sessionStorage.setItem("counted_total","1");
 
-        const el = document.getElementById("visitsNow");
-        if(el) el.innerText = (j && typeof j.value === "number") ? j.value : "—";
+        if(j && typeof j.value === "number"){
+          localStorage.setItem("last_visits_value", String(j.value));
+          setVisitsValue(j.value);
+        }else{
+          const cached = Number(localStorage.getItem("last_visits_value"));
+          setVisitsValue(Number.isFinite(cached) ? cached : "—");
+        }
       }catch(e){
-        const el = document.getElementById("visitsNow");
-        if(el) el.innerText = "—";
+        // لو فشل CountAPI (AdBlock/شبكة) اعرض آخر رقم ناجح إن وجد
+        const cached = Number(localStorage.getItem("last_visits_value"));
+        setVisitsValue(Number.isFinite(cached) ? cached : "—");
       }
     }
 
+    // =========================
+    // i18n
+    // =========================
     const i18n = {
       ar:{
         brand:"جاهز",
@@ -296,5 +328,3 @@
   </script>
 </body>
 </html>
-
-
