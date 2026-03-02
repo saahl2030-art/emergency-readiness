@@ -1,146 +1,154 @@
-<!-- index.html -->
 <!DOCTYPE html>
 <html lang="ar" dir="rtl">
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>جاهز للأزمات والطوارئ؟</title>
+
   <style>
     :root{
-      --bg0:#070b12;
-      --bg1:#0b1220;
-      --panel:rgba(255,255,255,.06);
-      --panel2:rgba(255,255,255,.08);
+      --bg:#071420;
+      --bg2:#0a1d2e;
+      --card:rgba(255,255,255,.06);
+      --card2:rgba(255,255,255,.08);
       --border:rgba(255,255,255,.10);
-      --text:#eaf0ff;
-      --muted:rgba(234,240,255,.72);
-      --accent:#66f0d0;      /* لمسة راحة */
-      --accent2:#6aa7ff;     /* أزرق مريح */
+      --text:#eaf4ff;
+      --muted:rgba(234,244,255,.70);
+      --accent:#34d399;     /* تركواز مريح */
+      --accent2:#60a5fa;    /* أزرق مريح */
       --shadow:0 24px 70px rgba(0,0,0,.45);
       --radius:18px;
     }
     *{box-sizing:border-box}
     body{
       margin:0;
-      font-family:Tahoma, Arial, sans-serif;
+      font-family: Tahoma, Arial, sans-serif;
       color:var(--text);
       background:
-        radial-gradient(900px 500px at 80% 15%, rgba(106,167,255,.20), transparent 55%),
-        radial-gradient(900px 500px at 20% 85%, rgba(102,240,208,.14), transparent 60%),
-        linear-gradient(180deg, var(--bg0), var(--bg1));
+        radial-gradient(900px 520px at 20% 15%, rgba(96,165,250,.22), transparent 60%),
+        radial-gradient(900px 520px at 85% 75%, rgba(52,211,153,.18), transparent 62%),
+        linear-gradient(180deg, var(--bg), var(--bg2));
       min-height:100vh;
     }
     .topbar{
       position:sticky; top:0; z-index:10;
-      background:linear-gradient(180deg, rgba(11,18,32,.92), rgba(11,18,32,.68));
-      border-bottom:1px solid var(--border);
       backdrop-filter: blur(10px);
+      background: linear-gradient(180deg, rgba(7,20,32,.92), rgba(7,20,32,.68));
+      border-bottom:1px solid var(--border);
       padding:12px 16px;
-      display:flex;
-      justify-content:space-between;
-      align-items:center;
-      gap:12px;
+      display:flex; align-items:center; justify-content:space-between; gap:12px;
     }
     .brand{
       display:flex; align-items:center; gap:10px;
-      font-weight:700;
-      color:var(--text);
-      opacity:.95;
+      font-weight:900;
       white-space:nowrap;
     }
-    .brand .dot{
+    .dot{
       width:10px; height:10px; border-radius:999px;
-      background:linear-gradient(90deg,var(--accent),var(--accent2));
-      box-shadow:0 0 22px rgba(102,240,208,.35);
+      background: linear-gradient(90deg, var(--accent2), var(--accent));
+      box-shadow: 0 0 26px rgba(52,211,153,.28);
     }
     .lang{
       display:flex; gap:8px; align-items:center;
     }
     .btn{
       border:1px solid var(--border);
-      background:rgba(255,255,255,.06);
-      color:var(--text);
+      background: rgba(255,255,255,.06);
+      color: var(--text);
       padding:8px 12px;
       border-radius:999px;
+      font-weight:800;
       cursor:pointer;
-      font-weight:700;
-      transition:.2s ease;
+      transition:.15s;
     }
-    .btn:hover{ background:rgba(255,255,255,.10) }
+    .btn:hover{ background: rgba(255,255,255,.10); transform: translateY(-1px); }
     .btn.primary{
       border:none;
-      background:linear-gradient(90deg,var(--accent2),var(--accent));
-      color:#06101d;
-      box-shadow:0 10px 30px rgba(106,167,255,.18);
+      background: linear-gradient(90deg, var(--accent2), var(--accent));
+      color:#062033;
+      box-shadow: 0 12px 30px rgba(96,165,250,.14);
     }
-    .wrap{
-      max-width:1000px;
-      margin:0 auto;
-      padding:34px 16px 60px;
-    }
+
+    .wrap{ max-width:1050px; margin:0 auto; padding:28px 16px 64px; }
     .hero{
       border:1px solid var(--border);
-      background:linear-gradient(180deg, rgba(255,255,255,.06), rgba(255,255,255,.04));
-      border-radius:var(--radius);
-      box-shadow:var(--shadow);
-      padding:34px 18px;
+      background: linear-gradient(180deg, rgba(255,255,255,.07), rgba(255,255,255,.04));
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+      padding:32px 18px;
       text-align:center;
     }
     h1{
-      margin:0 0 12px;
-      font-size:42px;
+      margin:0 0 10px;
+      font-size:44px;
+      line-height:1.1;
       letter-spacing:.2px;
-      line-height:1.15;
     }
     .sub{
-      margin:0 auto 18px;
-      max-width:720px;
+      margin:0 auto 16px;
+      max-width:760px;
       color:var(--muted);
       font-size:18px;
-      line-height:1.8;
+      line-height:1.9;
     }
+
+    .kpis{
+      display:flex;
+      justify-content:center;
+      gap:10px;
+      flex-wrap:wrap;
+      margin: 10px 0 0;
+    }
+    .pill{
+      border:1px solid var(--border);
+      background: rgba(255,255,255,.05);
+      padding:8px 12px;
+      border-radius:999px;
+      font-weight:800;
+      color: var(--muted);
+      font-size:13px;
+      white-space:nowrap;
+    }
+    .pill b{ color: var(--text); }
+
     .ctaRow{
       display:flex;
       justify-content:center;
       gap:12px;
       flex-wrap:wrap;
-      margin-top:14px;
+      margin-top:18px;
     }
-    a.cta{
-      text-decoration:none;
-      display:inline-block;
-    }
-    .cardsTitle{
-      margin:34px 0 14px;
-      text-align:center;
-      font-size:26px;
-      font-weight:800;
-    }
-    .cards{
+    a{ text-decoration:none; }
+
+    .grid{
+      margin-top:18px;
       display:grid;
       grid-template-columns:repeat(3, 1fr);
-      gap:14px;
+      gap:12px;
     }
     .card{
       border:1px solid var(--border);
-      background:rgba(255,255,255,.05);
+      background: rgba(255,255,255,.05);
       border-radius:16px;
-      padding:18px 16px;
-      box-shadow:0 16px 40px rgba(0,0,0,.25);
+      padding:16px 14px;
+      box-shadow: 0 16px 44px rgba(0,0,0,.22);
       min-height:140px;
     }
-    .card h3{ margin:0 0 8px; font-size:18px }
-    .card p{ margin:0; color:var(--muted); line-height:1.7; font-size:14.5px }
+    .card h3{ margin:0 0 8px; font-size:18px; }
+    .card p{ margin:0; color:var(--muted); line-height:1.8; font-size:14.5px; }
+
     .footer{
-      margin-top:26px;
+      margin-top:22px;
       text-align:center;
-      color:rgba(234,240,255,.55);
+      color: rgba(234,244,255,.55);
       font-size:12.5px;
+      line-height:1.7;
     }
-    @media (max-width:900px){
-      h1{font-size:34px}
-      .cards{grid-template-columns:1fr}
-      .hero{padding:28px 16px}
+
+    @media (max-width:980px){
+      h1{ font-size:34px; }
+      .grid{ grid-template-columns:1fr; }
+      .hero{ padding:26px 16px; }
     }
   </style>
 </head>
@@ -150,76 +158,94 @@
     <div class="lang">
       <button class="btn" onclick="setLang('ar')">AR</button>
       <button class="btn" onclick="setLang('en')">EN</button>
-      <a class="cta" href="survey.html"><button class="btn primary" id="topCta">ابدأ التقييم</button></a>
+      <a href="survey.html"><button class="btn primary" id="topCta">ابدأ التقييم</button></a>
     </div>
   </div>
 
   <div class="wrap">
     <div class="hero">
-     <h1>جاهز للأزمات والطوارئ؟</h1>
+      <h1 id="hTitle">جاهز للأزمات والطوارئ؟</h1>
       <p class="sub" id="hSub">
-        قيّم جاهزية أسرتك خلال دقائق واحصل على مؤشر جاهزية + توصيات عملية لتحسين التخطيط والتجهيز والاستعداد للأزمات.
+        قياس سريع وواضح لمدى جاهزية أسرتك، مع توصيات عملية مبنية على إجاباتك واحتياجات المنزل.
       </p>
+
+      <div class="kpis">
+        <div class="pill" id="kpiQ"><b>14</b> سؤال</div>
+        <div class="pill" id="kpiTime">المدة: <b>1–2</b> دقيقة</div>
+        <div class="pill" id="kpiVisits">الزيارات الحالية: <b id="visitsNow">…</b></div>
+      </div>
+
       <div class="ctaRow">
-        <a class="cta" href="survey.html"><button class="btn primary" id="ctaMain">ابدأ التقييم الآن</button></a>
-        <a class="cta" href="survey.html#why"><button class="btn" id="ctaSecondary">ماذا يقيس الاستبيان؟</button></a>
+        <a href="survey.html"><button class="btn primary" id="ctaMain">ابدأ التقييم الآن</button></a>
+        <a href="survey.html#results"><button class="btn" id="ctaSecondary">عرض النتيجة والتوصيات</button></a>
       </div>
     </div>
 
-    <div class="cardsTitle" id="cardsTitle">ماذا يقيس الاستبيان؟</div>
-
-    <div class="cards" id="cards">
+    <div class="grid">
       <div class="card">
         <h3 id="c1t">التخطيط</h3>
-        <p id="c1p">وجود خطة طوارئ واضحة (أدوار – نقاط تجمع – أرقام مهمة).</p>
+        <p id="c1p">خطة طوارئ، أدوار واضحة، ونقطة تجمع.</p>
       </div>
       <div class="card">
         <h3 id="c2t">التجهيزات</h3>
-        <p id="c2p">مدى توفر احتياجات 72 ساعة (ماء – غذاء – إسعافات – بطاريات).</p>
+        <p id="c2p">ماء وغذاء 72 ساعة + إسعافات + مصابيح وبطاريات.</p>
       </div>
       <div class="card">
-        <h3 id="c3t">التواصل</h3>
-        <p id="c3p">خطة تواصل بديلة عند انقطاع الشبكة، ومعرفة مسارات الخروج.</p>
+        <h3 id="c3t">السلامة</h3>
+        <p id="c3p">كاشف دخان، طفاية، ومعرفة فصل الغاز والكهرباء.</p>
       </div>
     </div>
 
-    <div class="footer" id="foot">© 2026 جاهزية الاستعداد للطوارئ السكنية</div>
+    <div class="footer" id="foot">
+      هذه الأداة توعوية وتدعم الاستعداد المنزلي بشكل منظم، وليست بديلاً عن تعليمات الجهات الرسمية.
+    </div>
   </div>
 
   <script>
+    // ====== CountAPI (Landing shows current count only - no increment) ======
+    const namespace = "emergency-readiness-uae";
+    const key = "survey-visits";
+    async function loadVisits(){
+      try{
+        const r = await fetch(`https://api.countapi.xyz/get/${namespace}/${key}`);
+        const j = await r.json();
+        document.getElementById("visitsNow").innerText = (j && typeof j.value === "number") ? j.value : "—";
+      }catch(e){
+        document.getElementById("visitsNow").innerText = "—";
+      }
+    }
+
+    // ====== i18n ======
     const i18n = {
-      ar: {
-        brand: "جاهز",
-        title: "هل منزلك مستعد للطوارئ؟",
-        sub: "قيّم جاهزية أسرتك خلال دقائق واحصل على مؤشر جاهزية + توصيات عملية لتحسين التخطيط والتجهيز والاستعداد للأزمات.",
-        topCta: "ابدأ التقييم",
-        ctaMain: "ابدأ التقييم الآن",
-        ctaSecondary: "ماذا يقيس الاستبيان؟",
-        cardsTitle: "ماذا يقيس الاستبيان؟",
-        c1t:"التخطيط", c1p:"وجود خطة طوارئ واضحة (أدوار – نقاط تجمع – أرقام مهمة).",
-        c2t:"التجهيزات", c2p:"مدى توفر احتياجات 72 ساعة (ماء – غذاء – إسعافات – بطاريات).",
-        c3t:"التواصل", c3p:"خطة تواصل بديلة عند انقطاع الشبكة، ومعرفة مسارات الخروج.",
-        foot:"© 2026 جاهزية الاستعداد للطوارئ السكنية"
+      ar:{
+        brand:"جاهز",
+        title:"جاهز للأزمات والطوارئ؟",
+        sub:"قياس سريع وواضح لمدى جاهزية أسرتك، مع توصيات عملية مبنية على إجاباتك واحتياجات المنزل.",
+        topCta:"ابدأ التقييم",
+        ctaMain:"ابدأ التقييم الآن",
+        ctaSecondary:"عرض النتيجة والتوصيات",
+        c1t:"التخطيط", c1p:"خطة طوارئ، أدوار واضحة، ونقطة تجمع.",
+        c2t:"التجهيزات", c2p:"ماء وغذاء 72 ساعة + إسعافات + مصابيح وبطاريات.",
+        c3t:"السلامة", c3p:"كاشف دخان، طفاية، ومعرفة فصل الغاز والكهرباء.",
+        foot:"هذه الأداة توعوية وتدعم الاستعداد المنزلي بشكل منظم، وليست بديلاً عن تعليمات الجهات الرسمية."
       },
-      en: {
-        brand: "Ready",
-        title: "Is your home emergency-ready?",
-        sub: "Assess your household readiness in minutes and get a readiness score + practical recommendations to improve planning and preparedness.",
-        topCta: "Start",
-        ctaMain: "Start Assessment",
-        ctaSecondary: "What does it measure?",
-        cardsTitle: "What does it measure?",
-        c1t:"Planning", c1p:"A clear emergency plan (roles, meeting points, key numbers).",
-        c2t:"Supplies", c2p:"72-hour essentials (water, food, first aid, batteries).",
-        c3t:"Communication", c3p:"Backup communication plan and knowing exit routes.",
-        foot:"© 2026 Residential Emergency Readiness"
+      en:{
+        brand:"Ready",
+        title:"Ready for emergencies?",
+        sub:"A quick, clear assessment of your family’s preparedness, with practical recommendations tailored to your home needs.",
+        topCta:"Start",
+        ctaMain:"Start Assessment",
+        ctaSecondary:"See results & tips",
+        c1t:"Planning", c1p:"An emergency plan, clear roles, and a meeting point.",
+        c2t:"Supplies", c2p:"72-hour water/food + first aid + lights & batteries.",
+        c3t:"Safety", c3p:"Smoke detector, extinguisher, and shut-off knowledge.",
+        foot:"This tool is for awareness and does not replace official guidance."
       }
     };
 
     function setLang(lang){
       localStorage.setItem("lang", lang);
       const t = i18n[lang] || i18n.ar;
-
       document.documentElement.lang = lang;
       document.documentElement.dir  = (lang === "ar") ? "rtl" : "ltr";
 
@@ -229,22 +255,17 @@
       document.getElementById("topCta").innerText = t.topCta;
       document.getElementById("ctaMain").innerText = t.ctaMain;
       document.getElementById("ctaSecondary").innerText = t.ctaSecondary;
-      document.getElementById("cardsTitle").innerText = t.cardsTitle;
-
       document.getElementById("c1t").innerText = t.c1t;
       document.getElementById("c1p").innerText = t.c1p;
       document.getElementById("c2t").innerText = t.c2t;
       document.getElementById("c2p").innerText = t.c2p;
       document.getElementById("c3t").innerText = t.c3t;
       document.getElementById("c3p").innerText = t.c3p;
-
       document.getElementById("foot").innerText = t.foot;
     }
 
     setLang(localStorage.getItem("lang") || "ar");
+    loadVisits();
   </script>
 </body>
 </html>
-
-
-
