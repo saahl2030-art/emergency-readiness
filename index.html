@@ -5,6 +5,11 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>جاهز للأزمات والطوارئ؟</title>
 
+  <!-- ✅ Cloudflare Web Analytics (Tracking) -->
+  <script defer src="https://static.cloudflareinsights.com/beacon.min.js"
+    data-cf-beacon='{"token": "939903ca17af478c93e70f9660a1a73f"}'></script>
+  <!-- ✅ End Cloudflare Web Analytics -->
+
   <style>
     :root{
       --bg:#071521;
@@ -153,6 +158,7 @@
     }
   </style>
 </head>
+
 <body>
   <div class="topbar">
     <div class="brand"><span class="dot"></span><span id="brandText">جاهز</span></div>
@@ -173,7 +179,12 @@
       <div class="kpis">
         <div class="pill"><b id="kQ">10</b> <span id="kQText">أسئلة</span></div>
         <div class="pill" id="kpiTime"><span id="kTime">المدة:</span> <b>1–2</b> <span id="kMin">دقيقة</span></div>
-        <div class="pill"><span id="kpiVisitsLabel">إجمالي الزيارات:</span> <b id="visitsNow">…</b></div>
+
+        <!-- ✅ Visits badge (Ready for Worker API) -->
+        <div class="pill">
+          <span id="kpiVisitsLabel">إجمالي الزيارات:</span>
+          <b id="visitsNow">يتم التتبع</b>
+        </div>
       </div>
 
       <div class="ctaRow">
@@ -204,55 +215,31 @@
 
   <script>
     // =========================
-    // CountAPI - Total visits (increase once per session)
+    // OPTIONAL: Real counter via your own API (Cloudflare Worker)
     // =========================
-    const namespace = "emergency-readiness-uae";
-    const key = "total-visits";
+    // لو عندك API لاحقًا، فقط ضع رابطك هنا وسيظهر الرقم.
+    // مثال: const VISITS_API = "https://your-worker.your-domain.workers.dev/visits";
+    const VISITS_API = "";
 
-    function setVisitsValue(val){
+    async function loadVisitsIfApiExists(){
       const el = document.getElementById("visitsNow");
       if(!el) return;
-      el.innerText = (typeof val === "number") ? val : "—";
-    }
 
-    async function fetchWithTimeout(url, ms=4500){
-      const controller = new AbortController();
-      const timer = setTimeout(() => controller.abort(), ms);
-      try{
-        const res = await fetch(url, { cache:"no-store", signal: controller.signal });
-        return res;
-      } finally {
-        clearTimeout(timer);
+      if(!VISITS_API){
+        // لا يوجد API — Cloudflare Web Analytics شغال داخل لوحة التحكم
+        return;
       }
-    }
-
-    async function updateTotalVisits(){
-      const counted = sessionStorage.getItem("counted_total") === "1";
-
-      const safeNS  = encodeURIComponent(namespace);
-      const safeKey = encodeURIComponent(key);
-
-      const url = counted
-        ? `https://api.countapi.xyz/get/${safeNS}/${safeKey}`
-        : `https://api.countapi.xyz/hit/${safeNS}/${safeKey}`;
 
       try{
-        const r = await fetchWithTimeout(url, 4500);
+        const r = await fetch(VISITS_API, { cache: "no-store" });
         const j = await r.json();
-
-        if(!counted) sessionStorage.setItem("counted_total","1");
-
-        if(j && typeof j.value === "number"){
-          localStorage.setItem("last_visits_value", String(j.value));
-          setVisitsValue(j.value);
+        if(j && typeof j.total === "number"){
+          el.innerText = j.total;
         }else{
-          const cached = Number(localStorage.getItem("last_visits_value"));
-          setVisitsValue(Number.isFinite(cached) ? cached : "—");
+          el.innerText = "—";
         }
       }catch(e){
-        // لو فشل CountAPI (AdBlock/شبكة) اعرض آخر رقم ناجح إن وجد
-        const cached = Number(localStorage.getItem("last_visits_value"));
-        setVisitsValue(Number.isFinite(cached) ? cached : "—");
+        el.innerText = "—";
       }
     }
 
@@ -274,7 +261,8 @@
         visitsLabel:"إجمالي الزيارات:",
         qText:"أسئلة",
         time:"المدة:",
-        min:"دقيقة"
+        min:"دقيقة",
+        trackingText:"يتم التتبع"
       },
       en:{
         brand:"Ready",
@@ -290,7 +278,8 @@
         visitsLabel:"Total visits:",
         qText:"questions",
         time:"Time:",
-        min:"min"
+        min:"min",
+        trackingText:"Tracking"
       }
     };
 
@@ -321,10 +310,16 @@
       document.getElementById("kQText").innerText = t.qText;
       document.getElementById("kTime").innerText = t.time;
       document.getElementById("kMin").innerText = t.min;
+
+      // لا تغير رقم الزيارات إذا كان رقم
+      const vn = document.getElementById("visitsNow");
+      if(vn && (vn.innerText === "يتم التتبع" || vn.innerText === "Tracking")){
+        vn.innerText = t.trackingText;
+      }
     }
 
     setLang(localStorage.getItem("lang") || "ar");
-    updateTotalVisits();
+    loadVisitsIfApiExists();
   </script>
 </body>
 </html>
