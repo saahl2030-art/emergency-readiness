@@ -208,20 +208,22 @@
     const key = "total-visits";
 
     async function updateTotalVisits(){
-      const counted = sessionStorage.getItem("counted_total");
+      const counted = sessionStorage.getItem("counted_total") === "1";
       try{
         const url = counted
-          ? https://api.countapi.xyz/get/${namespace}/${key}
-          : https://api.countapi.xyz/hit/${namespace}/${key};
+          ? `https://api.countapi.xyz/get/${namespace}/${key}`
+          : `https://api.countapi.xyz/hit/${namespace}/${key}`;
 
-        const r = await fetch(url);
+        const r = await fetch(url, { cache: "no-store" });
         const j = await r.json();
+
         if(!counted) sessionStorage.setItem("counted_total","1");
 
-        document.getElementById("visitsNow").innerText =
-          (j && typeof j.value === "number") ? j.value : "—";
+        const el = document.getElementById("visitsNow");
+        if(el) el.innerText = (j && typeof j.value === "number") ? j.value : "—";
       }catch(e){
-        document.getElementById("visitsNow").innerText = "—";
+        const el = document.getElementById("visitsNow");
+        if(el) el.innerText = "—";
       }
     }
 
@@ -263,6 +265,7 @@
     function setLang(lang){
       localStorage.setItem("lang", lang);
       const t = i18n[lang] || i18n.ar;
+
       document.documentElement.lang = lang;
       document.documentElement.dir  = (lang === "ar") ? "rtl" : "ltr";
 
@@ -272,12 +275,14 @@
       document.getElementById("topCta").innerText = t.topCta;
       document.getElementById("ctaMain").innerText = t.ctaMain;
       document.getElementById("ctaSecondary").innerText = t.ctaSecondary;
+
       document.getElementById("c1t").innerText = t.c1t;
       document.getElementById("c1p").innerText = t.c1p;
       document.getElementById("c2t").innerText = t.c2t;
       document.getElementById("c2p").innerText = t.c2p;
       document.getElementById("c3t").innerText = t.c3t;
       document.getElementById("c3p").innerText = t.c3p;
+
       document.getElementById("foot").innerText = t.foot;
 
       document.getElementById("kpiVisitsLabel").innerText = t.visitsLabel;
