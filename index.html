@@ -180,10 +180,10 @@
         <div class="pill"><b id="kQ">10</b> <span id="kQText">أسئلة</span></div>
         <div class="pill" id="kpiTime"><span id="kTime">المدة:</span> <b>1–2</b> <span id="kMin">دقيقة</span></div>
 
-        <!-- ✅ Visits badge (Ready for Worker API) -->
+        <!-- ✅ Firestore Visits badge -->
         <div class="pill">
           <span id="kpiVisitsLabel">إجمالي الزيارات:</span>
-          <b id="visitsNow">يتم التتبع</b>
+          <b id="visitsNow">...</b>
         </div>
       </div>
 
@@ -215,35 +215,6 @@
 
   <script>
     // =========================
-    // OPTIONAL: Real counter via your own API (Cloudflare Worker)
-    // =========================
-    // لو عندك API لاحقًا، فقط ضع رابطك هنا وسيظهر الرقم.
-    // مثال: const VISITS_API = "https://your-worker.your-domain.workers.dev/visits";
-    const VISITS_API = "";
-
-    async function loadVisitsIfApiExists(){
-      const el = document.getElementById("visitsNow");
-      if(!el) return;
-
-      if(!VISITS_API){
-        // لا يوجد API — Cloudflare Web Analytics شغال داخل لوحة التحكم
-        return;
-      }
-
-      try{
-        const r = await fetch(VISITS_API, { cache: "no-store" });
-        const j = await r.json();
-        if(j && typeof j.total === "number"){
-          el.innerText = j.total;
-        }else{
-          el.innerText = "—";
-        }
-      }catch(e){
-        el.innerText = "—";
-      }
-    }
-
-    // =========================
     // i18n
     // =========================
     const i18n = {
@@ -262,7 +233,6 @@
         qText:"أسئلة",
         time:"المدة:",
         min:"دقيقة",
-        trackingText:"يتم التتبع"
       },
       en:{
         brand:"Ready",
@@ -279,7 +249,6 @@
         qText:"questions",
         time:"Time:",
         min:"min",
-        trackingText:"Tracking"
       }
     };
 
@@ -310,16 +279,77 @@
       document.getElementById("kQText").innerText = t.qText;
       document.getElementById("kTime").innerText = t.time;
       document.getElementById("kMin").innerText = t.min;
-
-      // لا تغير رقم الزيارات إذا كان رقم
-      const vn = document.getElementById("visitsNow");
-      if(vn && (vn.innerText === "يتم التتبع" || vn.innerText === "Tracking")){
-        vn.innerText = t.trackingText;
-      }
     }
 
     setLang(localStorage.getItem("lang") || "ar");
-    loadVisitsIfApiExists();
+  </script>
+
+  <!-- ✅ Firestore Counter (Modular SDK) -->
+  <script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.5/firebase-app.js";
+    import { getFirestore, doc, getDoc, runTransaction } from "https://www.gstatic.com/firebasejs/10.12.5/firebase-firestore.js";
+
+    // 1) ضع إعدادات Firebase من مشروعك هنا (مهم جداً)
+    const firebaseConfig = {
+      apiKey: "PUT_YOUR_API_KEY",
+      authDomain: "PUT_YOUR_AUTH_DOMAIN",
+      projectId: "PUT_YOUR_PROJECT_ID",
+      storageBucket: "PUT_YOUR_STORAGE_BUCKET",
+      messagingSenderId: "PUT_YOUR_SENDER_ID",
+      appId: "PUT_YOUR_APP_ID"
+    };
+
+    const app = initializeApp(firebaseConfig);
+    const db = getFirestore(app);
+
+    // 2) المسار الذي أنشأته أنت: collection=settings , doc=main , field=counter
+    const counterRef = doc(db, "settings", "main");
+    const visitsEl = document.getElementById("visitsNow");
+
+    function formatNumber(n){
+      try { return new Intl.NumberFormat().format(n); }
+      catch { return String(n); }
+    }
+
+    async function readCounter(){
+      const snap = await getDoc(counterRef);
+      const val = snap.exists() ? (snap.data().counter ?? 0) : 0;
+      visitsEl.innerText = formatNumber(val);
+      return val;
+    }
+
+    async function incrementOncePerSession(){
+      // يمنع الزيادة مع كل Refresh داخل نفس الجلسة
+      const SESSION_KEY = "visits_counted_session_v1";
+      if (sessionStorage.getItem(SESSION_KEY) === "1") {
+        await readCounter();
+        return;
+      }
+
+      try {
+        const newVal = await runTransaction(db, async (tx) => {
+          const snap = await tx.get(counterRef);
+          const current = snap.exists() ? (snap.data().counter ?? 0) : 0;
+          const next = Number(current) + 1;
+          // merge:true لضمان عدم حذف أي حقول لاحقاً
+          tx.set(counterRef, { counter: next }, { merge: true });
+          return next;
+        });
+
+        sessionStorage.setItem(SESSION_KEY, "1");
+        visitsEl.innerText = formatNumber(newVal);
+
+      } catch (e) {
+        // إذا فشل (قواعد/شبكة) اعرض القراءة فقط
+        try { await readCounter(); } catch { visitsEl.innerText = "—"; }
+      }
+    }
+
+    // تشغيل
+    if (visitsEl) {
+      visitsEl.innerText = "...";
+      incrementOncePerSession();
+    }
   </script>
 </body>
 </html>
