@@ -478,7 +478,30 @@
     }
 
     const currentLang = () => localStorage.getItem("lang") || "ar";
+// ===== عداد الزيارات (CountAPI) =====
+const namespace = "emergency-readiness-uae";
+const key = "survey-visits";
 
+window.__visitPrefix = i18n[currentLang()].visit;
+
+async function hitCounter(){
+  try{
+    const r = await fetch(`https://api.countapi.xyz/hit/${namespace}/${key}`);
+    const j = await r.json();
+    const v = (j && typeof j.value === "number") ? j.value : "—";
+    document.getElementById("visitCounter").innerText = window.__visitPrefix + v;
+  }catch(e){
+    document.getElementById("visitCounter").innerText = window.__visitPrefix + "—";
+  }
+}
+
+function refreshVisitCounterOnly(){
+  // يعيد كتابة النص حسب اللغة الحالية بدون زيادة الرقم
+  const currentText = document.getElementById("visitCounter").innerText;
+  const parts = currentText.split(":");
+  const val = parts.length > 1 ? parts.pop().trim() : "…";
+  document.getElementById("visitCounter").innerText = window.__visitPrefix + val;
+}
     // =========================
     // 2) الأسئلة (مختصرة أكثر)
     // =========================
