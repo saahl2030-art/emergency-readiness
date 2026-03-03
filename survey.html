@@ -259,9 +259,97 @@
     .rec ul{ margin:10px 0 0; padding:0 18px }
     .rec li{ margin:7px 0 }
 
+    /* =========================
+       Modal Base (reused)
+       ========================= */
+    .modalOverlay{
+      position:fixed;
+      inset:0;
+      background:rgba(0,0,0,.55);
+      backdrop-filter: blur(6px);
+      display:none;
+      align-items:center;
+      justify-content:center;
+      padding:16px;
+      z-index:9999;
+    }
+    .modal{
+      width:min(680px, 100%);
+      border:1px solid rgba(255,255,255,.14);
+      background:linear-gradient(180deg, rgba(255,255,255,.08), rgba(255,255,255,.04));
+      border-radius:18px;
+      box-shadow:0 30px 90px rgba(0,0,0,.55);
+      padding:16px 16px 14px;
+    }
+    .modalHeader{
+      display:flex;
+      align-items:flex-start;
+      justify-content:space-between;
+      gap:10px;
+    }
+    .modalTitle{
+      margin:0;
+      font-size:18px;
+      font-weight:900;
+      color:rgba(234,244,255,.96);
+      line-height:1.4;
+    }
+    .modalClose{
+      border:1px solid rgba(255,255,255,.14);
+      background:rgba(255,255,255,.06);
+      color:rgba(234,244,255,.92);
+      width:36px;
+      height:36px;
+      border-radius:12px;
+      cursor:pointer;
+      font-weight:900;
+    }
+    .modalClose:hover{ background:rgba(255,255,255,.10); }
+    .modalBody{
+      margin-top:10px;
+      color:rgba(234,244,255,.85);
+      line-height:2;
+      font-size:14.6px;
+    }
+    .modalBody .strong{
+      display:block;
+      margin:10px 0 0;
+      font-weight:900;
+      color:rgba(234,244,255,.96);
+    }
+    .modalActions{
+      margin-top:12px;
+      display:flex;
+      gap:10px;
+      flex-wrap:wrap;
+    }
+    .modalActions .btn{ flex: 1 1 auto; }
+
+    /* Feedback iframe */
+    .iframeBox{
+      margin-top:10px;
+      border:1px solid rgba(255,255,255,.12);
+      border-radius:16px;
+      overflow:hidden;
+      background:rgba(0,0,0,.18);
+    }
+    .iframeBox iframe{
+      width:100%;
+      height:min(70vh, 640px);
+      border:0;
+      display:block;
+    }
+    .hintSmall{
+      margin-top:8px;
+      color:rgba(234,244,255,.65);
+      font-size:12.8px;
+      line-height:1.7;
+    }
+
     @media (max-width:980px){
       .grid{ grid-template-columns:1fr; }
       .fieldRow{ grid-template-columns:1fr; }
+      .modal{ width:min(720px, 100%); }
     }
   </style>
 </head>
@@ -425,7 +513,7 @@
             </div>
 
             <p class="sub" style="margin-top:10px" id="fbNote">
-              * زر “حفظ” يخزنها في جهازك فقط. زر “إرسال” يحتاج رابط فورم (Google Form) لكي تصل لنا.
+              * زر “إرسال الملاحظة” يفتح نموذجًا بدون إظهار بريدك. اكتب فقط الملاحظة واضغط إرسال.
             </p>
           </div>
 
@@ -449,7 +537,57 @@
     </div>
   </div>
 
+  <!-- ✅ National Message Modal (shows once per user) -->
+  <div class="modalOverlay" id="uaeModalOverlay" role="dialog" aria-modal="true" aria-labelledby="uaeModalTitle">
+    <div class="modal" id="uaeModal">
+      <div class="modalHeader">
+        <h3 class="modalTitle" id="uaeModalTitle">معًا نعزز أمن وطننا</h3>
+        <button class="modalClose" type="button" id="uaeModalClose" aria-label="إغلاق">✕</button>
+      </div>
+
+      <div class="modalBody" id="uaeModalBody">
+        استعدادك اليوم يعكس وعيًا يليق بوطنٍ بُني على المسؤولية والتكاتف.<br>
+        كل الشكر والتقدير لكل من يسهر لحماية الإمارات وأمنها واستقرارها.<br>
+        <span class="strong">حفظ الله الإمارات دائمًا وأبدًا.</span>
+      </div>
+
+      <div class="modalActions">
+        <button class="btn primary" type="button" id="uaeModalOk">تم</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ✅ Feedback Modal (iframe Google Form) -->
+  <div class="modalOverlay" id="fbModalOverlay" role="dialog" aria-modal="true" aria-labelledby="fbModalTitle">
+    <div class="modal" id="fbModal">
+      <div class="modalHeader">
+        <h3 class="modalTitle" id="fbModalTitle">إرسال ملاحظة</h3>
+        <button class="modalClose" type="button" id="fbModalClose" aria-label="إغلاق">✕</button>
+      </div>
+
+      <div class="modalBody" id="fbModalBody">
+        اكتب ملاحظتك في النموذج ثم اضغط “إرسال”.
+        <div class="iframeBox">
+          <iframe id="fbFrame" src="" loading="lazy" referrerpolicy="no-referrer"></iframe>
+        </div>
+        <div class="hintSmall" id="fbPrivacyHint">
+          * ملاحظة: إذا كنت مسجّل دخولك في Google قد يظهر حسابك لك أنت فقط، لكن لن يظهر للزوار الآخرين ما لم تُفعّل جمع البريد داخل إعدادات النموذج.
+        </div>
+      </div>
+
+      <div class="modalActions">
+        <button class="btn" type="button" id="fbOpenNewTab">فتح في نافذة جديدة</button>
+        <button class="btn primary" type="button" id="fbDone">تم</button>
+      </div>
+    </div>
+  </div>
+
   <script>
+    // =========================
+    // CONFIG
+    // =========================
+    const FEEDBACK_FORM_URL = "https://forms.gle/ASoBCYgCxW4JvBDVA"; // رابط الفورم (بدون إظهار بريدك للزوار)
+
     // =========================
     // CountAPI - Total visits (increase once per session)
     // =========================
@@ -460,27 +598,21 @@
       const counted = sessionStorage.getItem("counted_total");
       try{
         const url = counted
-          ? `https://api.countapi.xyz/get/${namespace}/${key}`
-          : `https://api.countapi.xyz/hit/${namespace}/${key}`;
+          ? `https://api.countapi.xyz/get/${encodeURIComponent(namespace)}/${encodeURIComponent(key)}`
+          : `https://api.countapi.xyz/hit/${encodeURIComponent(namespace)}/${encodeURIComponent(key)}`;
 
-        const r = await fetch(url);
+        const r = await fetch(url, { cache: "no-store" });
         const j = await r.json();
         if(!counted) sessionStorage.setItem("counted_total","1");
 
         const t = i18n[currentLang()];
         const val = (j && typeof j.value === "number") ? j.value : null;
-        document.getElementById("visitCounter").innerText = t.visit + (val===null ? "—" : val);
+        document.getElementById("visitCounter").innerText = t.visit + (val===null ? "—" : val.toLocaleString("en-US"));
       }catch(e){
         const t = i18n[currentLang()];
         document.getElementById("visitCounter").innerText = t.visit + "—";
       }
     }
-
-    // =========================
-    // Feedback form URL (optional)
-    // Put your Google Form URL here if you want to receive suggestions:
-    // =========================
-    const FEEDBACK_FORM_URL = ""; // مثال: "https://docs.google.com/forms/d/e/XXXX/viewform"
 
     // =========================
     // i18n
@@ -513,542 +645,4 @@
         btnCalc:"احسب النتيجة",
         btnReset:"مسح",
 
-        secResult:"النتيجة",
-        resultHint:"بعد الحساب ستظهر نسبة جاهزية + توصيات مرتبة حسب نقاط الضعف، مع مراعاة احتياجات الأسرة.",
-        secNote:"ملاحظة",
-        noteText:"هذا المؤشر توعوي لتنظيم الاستعداد، ولا يغني عن تعليمات الجهات المختصة.",
-
-        opt0:"غير متوفر",
-        opt1:"ضعيف",
-        opt2:"متوسط",
-        opt3:"جيد",
-        opt4:"ممتاز",
-
-        levelLow:"جاهزية منخفضة",
-        levelMid:"جاهزية متوسطة",
-        levelHigh:"جاهزية عالية",
-
-        badgeNeed:"تحتاج تحسين",
-        badgeGood:"جيد",
-        badgeExcellent:"ممتاز",
-
-        scoreLine:"النتيجة: ",
-        tipsTitle:"توصيات عملية:",
-
-        // chart + feedback
-        secChart:"ملخص المحاور",
-        chartTitle:"نتيجتك حسب المحاور",
-        axisPlan:"التخطيط",
-        axisSup:"التجهيزات",
-        axisSafe:"السلامة",
-
-        secFeedback:"ملاحظاتك لتحسين الاستعداد",
-        fbTitle:"اكتب اقتراحك أو ملاحظتك (اختياري)",
-        btnSaveFb:"حفظ الملاحظة",
-        btnSendFb:"إرسال الملاحظة",
-        fbNote:"* زر “حفظ” يخزنها في جهازك فقط. زر “إرسال” يحتاج رابط فورم (Google Form) لكي تصل لنا.",
-
-        // validations
-        needCommit:"يرجى تفعيل بند الالتزام بالإرشادات قبل حساب النتيجة.",
-        needBasics:"يرجى تعبئة البيانات الأساسية (نوع السكن + المنطقة + عدد القاطنين).",
-        savedLocal:"تم الحفظ على جهازك.",
-        writeFirst:"اكتب الملاحظة أولاً.",
-        addFormUrl:"أضف رابط Google Form داخل FEEDBACK_FORM_URL أولاً."
-      },
-      en: {
-        brand:"Ready",
-        back:"Home",
-        pageTitle:"Assess your readiness in 1 minute",
-        pageSub:"Answer briefly to get a readiness score with actionable recommendations.",
-        visit:"Total visits: ",
-        qCount:"Questions: 10",
-        time:"Time: 1–2 min",
-
-        secHome:"Home details",
-        lblHousingType:"Housing type",
-        lblArea:"Area / City",
-        lblResidents:"Residents",
-        lblSupplies:"Supply duration (water + food)",
-
-        chkKids:"Kids present (under 5)",
-        chkSeniors:"Seniors present (65+)",
-        chkDetermination:"Person of determination present",
-        chkMeds:"Daily medication needed",
-
-        secCompliance:"Guidelines commitment",
-        commitText:"I commit to follow the guidance of the National Emergency, Crisis and Disaster Management Authority and relevant official entities.",
-
-        secQuestions:"Readiness questions (10)",
-        btnCalc:"Calculate",
-        btnReset:"Clear",
-
-        secResult:"Result",
-        resultHint:"You’ll get a readiness % with prioritized recommendations, tailored to your household needs.",
-        secNote:"Note",
-        noteText:"Awareness indicator only. It does not replace official guidance.",
-
-        opt0:"Not available",
-        opt1:"Weak",
-        opt2:"Average",
-        opt3:"Good",
-        opt4:"Excellent",
-
-        levelLow:"Low readiness",
-        levelMid:"Medium readiness",
-        levelHigh:"High readiness",
-
-        badgeNeed:"Needs work",
-        badgeGood:"Good",
-        badgeExcellent:"Excellent",
-
-        scoreLine:"Score: ",
-        tipsTitle:"Actionable recommendations:",
-
-        secChart:"Axis summary",
-        chartTitle:"Your result by axis",
-        axisPlan:"Planning",
-        axisSup:"Supplies",
-        axisSafe:"Safety",
-
-        secFeedback:"Suggestions to improve readiness",
-        fbTitle:"Write your note (optional)",
-        btnSaveFb:"Save note",
-        btnSendFb:"Send note",
-        fbNote:"* “Save” stores it on your device only. “Send” requires a Google Form URL to reach us.",
-
-        needCommit:"Please check the commitment box before calculating.",
-        needBasics:"Please fill the basic info (housing type + area + residents).",
-        savedLocal:"Saved on your device.",
-        writeFirst:"Write a note first.",
-        addFormUrl:"Add your Google Form URL inside FEEDBACK_FORM_URL first."
-      }
-    };
-
-    function currentLang(){ return localStorage.getItem("lang") || "ar"; }
-
-    function setLang(lang){
-      localStorage.setItem("lang", lang);
-      const t = i18n[lang] || i18n.ar;
-
-      document.documentElement.lang = lang;
-      document.documentElement.dir  = (lang === "ar") ? "rtl" : "ltr";
-
-      document.getElementById("brandText").innerText = t.brand;
-      document.getElementById("backBtn").innerText = t.back;
-
-      document.getElementById("pageTitle").innerText = t.pageTitle;
-      document.getElementById("pageSub").innerText = t.pageSub;
-
-      document.getElementById("qCountPill").innerText = t.qCount;
-      document.getElementById("timePill").innerText = t.time;
-
-      document.getElementById("secHome").innerText = t.secHome;
-      document.getElementById("lblHousingType").innerText = t.lblHousingType;
-      document.getElementById("lblArea").innerText = t.lblArea;
-      document.getElementById("lblResidents").innerText = t.lblResidents;
-      document.getElementById("lblSupplies").innerText = t.lblSupplies;
-
-      document.getElementById("chkKids").innerText = t.chkKids;
-      document.getElementById("chkSeniors").innerText = t.chkSeniors;
-      document.getElementById("chkDetermination").innerText = t.chkDetermination;
-      document.getElementById("chkMeds").innerText = t.chkMeds;
-
-      document.getElementById("secCompliance").innerText = t.secCompliance;
-      document.getElementById("commitText").innerText = t.commitText;
-
-      document.getElementById("secQuestions").innerText = t.secQuestions;
-      document.getElementById("btnCalc").innerText = t.btnCalc;
-      document.getElementById("btnReset").innerText = t.btnReset;
-
-      document.getElementById("secResult").innerText = t.secResult;
-      document.getElementById("resultHint").innerText = t.resultHint;
-      document.getElementById("secNote").innerText = t.secNote;
-      document.getElementById("noteText").innerText = t.noteText;
-
-      // chart + feedback
-      document.getElementById("secChart").innerText = t.secChart;
-      document.getElementById("chartTitle").innerText = t.chartTitle;
-      document.getElementById("axisPlan").innerText = t.axisPlan;
-      document.getElementById("axisSup").innerText = t.axisSup;
-      document.getElementById("axisSafe").innerText = t.axisSafe;
-
-      document.getElementById("secFeedback").innerText = t.secFeedback;
-      document.getElementById("fbTitle").innerText = t.fbTitle;
-      document.getElementById("btnSaveFb").innerText = t.btnSaveFb;
-      document.getElementById("btnSendFb").innerText = t.btnSendFb;
-      document.getElementById("fbNote").innerText = t.fbNote;
-
-      // Housing options
-      const housing = document.getElementById("housingType");
-      const hv = housing.value;
-      housing.innerHTML = (lang==="en")
-        ? `
-          <option value="" selected>— Select —</option>
-          <option value="apartment">Apartment</option>
-          <option value="villa">Villa</option>
-          <option value="shared">Shared housing</option>
-          <option value="other">Other</option>`
-        : `
-          <option value="" selected>— اختر —</option>
-          <option value="apartment">شقة</option>
-          <option value="villa">فيلا</option>
-          <option value="shared">سكن مشترك</option>
-          <option value="other">أخرى</option>`;
-      housing.value = hv;
-
-      const supplies = document.getElementById("suppliesDuration");
-      const sv = supplies.value;
-      supplies.innerHTML = (lang==="en")
-        ? `
-          <option value="0" selected>Less than 24 hours</option>
-          <option value="1">24–48 hours</option>
-          <option value="2">48–72 hours</option>
-          <option value="3">More than 72 hours</option>`
-        : `
-          <option value="0" selected>أقل من 24 ساعة</option>
-          <option value="1">24–48 ساعة</option>
-          <option value="2">48–72 ساعة</option>
-          <option value="3">أكثر من 72 ساعة</option>`;
-      supplies.value = sv;
-
-      renderQuestions();
-      updateTotalVisits();
-    }
-
-    // =========================
-    // Questions (10)
-    // =========================
-    const questionsAR = [
-      "هل لديكم خطة طوارئ مكتوبة؟",
-      "هل يعرف الجميع أدوارهم؟",
-      "هل لديكم نقطة تجمع خارجية؟",
-      "هل أرقام الطوارئ محفوظة؟",
-      "هل لديكم وسيلة تواصل بديلة؟",
-      "هل ماء كافٍ لمدة 72 ساعة؟",
-      "هل غذاء غير قابل للتلف متوفر؟",
-      "هل حقيبة إسعافات مكتملة؟",
-      "هل كاشف الدخان يعمل؟",
-      "هل تعرفون فصل الغاز والكهرباء؟"
-    ];
-
-    const questionsEN = [
-      "Do you have a written emergency plan?",
-      "Does everyone know their role?",
-      "Do you have an outdoor meeting point?",
-      "Are emergency numbers saved?",
-      "Do you have a backup communication plan?",
-      "Enough water for 72 hours?",
-      "Non-perishable food available?",
-      "Complete first-aid kit?",
-      "Smoke detector working?",
-      "Know how to shut off gas/electricity?"
-    ];
-
-    function getQuestions(){
-      return currentLang()==="en" ? questionsEN : questionsAR;
-    }
-
-    function getOptions(){
-      const t = i18n[currentLang()];
-      return [
-        {value:0, text:t.opt0},
-        {value:1, text:t.opt1},
-        {value:2, text:t.opt2},
-        {value:3, text:t.opt3},
-        {value:4, text:t.opt4},
-      ];
-    }
-
-    function renderQuestions(){
-      const container = document.getElementById("questions");
-      container.innerHTML = "";
-
-      const qs = getQuestions();
-      const options = getOptions();
-
-      qs.forEach((q, idx) => {
-        const i = idx + 1;
-        const box = document.createElement("div");
-        box.className = "q";
-        box.innerHTML = `
-          <div class="qHead">
-            <div>${i}. ${q}</div>
-          </div>
-          <select id="q-${i}">
-            ${options.map(o => `<option value="${o.value}">${o.text}</option>`).join("")}
-          </select>
-        `;
-        container.appendChild(box);
-      });
-    }
-
-    // =========================
-    // Axis chart (Planning Q1-5, Supplies Q6-8, Safety Q9-10)
-    // =========================
-    function updateAxisChart(){
-      const qs = getQuestions();
-      if(!qs || qs.length !== 10) return;
-
-      const getVal = (i) => parseInt(document.getElementById(`q-${i}`).value, 10);
-
-      const plan = getVal(1)+getVal(2)+getVal(3)+getVal(4)+getVal(5);
-      const sup  = getVal(6)+getVal(7)+getVal(8);
-      const safe = getVal(9)+getVal(10);
-
-      const planPct = Math.round((plan / (5*4)) * 100);
-      const supPct  = Math.round((sup  / (3*4)) * 100);
-      const safePct = Math.round((safe / (2*4)) * 100);
-
-      document.getElementById("planPct").innerText = planPct + "%";
-      document.getElementById("supPct").innerText  = supPct + "%";
-      document.getElementById("safePct").innerText = safePct + "%";
-
-      document.getElementById("barPlan").style.width = planPct + "%";
-      document.getElementById("barSup").style.width  = supPct + "%";
-      document.getElementById("barSafe").style.width = safePct + "%";
-    }
-
-    // =========================
-    // Calculation + Recommendations
-    // =========================
-    function calculate(){
-      const t = i18n[currentLang()];
-      const qs = getQuestions();
-
-      // Validate commitment
-      if(!document.getElementById("commitGuidelines").checked){
-        alert(t.needCommit);
-        return;
-      }
-
-      // Validate basic info
-      const housingType = (document.getElementById("housingType").value || "").trim();
-      const area = (document.getElementById("area").value || "").trim();
-      const residentsStr = (document.getElementById("residents").value || "").trim();
-      if(!housingType || !area || !residentsStr){
-        alert(t.needBasics);
-        return;
-      }
-
-      let total = 0;
-      const weakIdx = new Set();
-
-      for(let i=1; i<=qs.length; i++){
-        const el = document.getElementById(`q-${i}`);
-        const v = parseInt(el.value, 10);
-        total += v;
-        if(v <= 1) weakIdx.add(i);
-      }
-
-      const maxScore = qs.length * 4;
-      const percent = Math.round((total / maxScore) * 100);
-
-      let levelText = "";
-      let badgeText = "";
-      if(percent < 40){
-        levelText = t.levelLow;
-        badgeText = t.badgeNeed;
-      }else if(percent < 75){
-        levelText = t.levelMid;
-        badgeText = t.badgeGood;
-      }else{
-        levelText = t.levelHigh;
-        badgeText = t.badgeExcellent;
-      }
-
-      const hasKids = document.getElementById("hasKids").checked;
-      const hasSeniors = document.getElementById("hasSeniors").checked;
-      const hasDet = document.getElementById("hasDetermination").checked;
-      const hasMeds = document.getElementById("hasMeds").checked;
-
-      const suppliesDuration = parseInt(document.getElementById("suppliesDuration").value, 10);
-      const residents = parseInt(document.getElementById("residents").value || "0", 10);
-
-      const tips = [];
-      const lang = currentLang();
-      const addTip = (ar,en) => tips.push(lang==="en" ? en : ar);
-
-      // Weakness-based tips
-      if(weakIdx.has(1) || weakIdx.has(2) || weakIdx.has(3)){
-        addTip(
-          "اكتبوا خطة طوارئ مختصرة (صفحة واحدة): الأدوار + نقطة التجمع + خطوات بسيطة، وراجعوها كل 3 أشهر.",
-          "Write a 1-page emergency plan: roles + meeting point + simple steps. Review every 3 months."
-        );
-      }
-      if(weakIdx.has(4)){
-        addTip(
-          "احفظوا أرقام الطوارئ في الهاتف + ورقة مطبوعة في مكان واضح داخل المنزل.",
-          "Save emergency numbers in phones + keep a printed list at home."
-        );
-      }
-      if(weakIdx.has(5)){
-        addTip(
-          "حددوا تواصل بديل: SMS + شخص قريب موثوق + نقطة اتصال ثابتة عند انقطاع الشبكة.",
-          "Set a backup comms plan: SMS + trusted nearby contact + fixed check-in point."
-        );
-      }
-      if(weakIdx.has(6) || weakIdx.has(7)){
-        addTip(
-          "ارفعوا مخزون الماء والغذاء تدريجيًا حتى 72 ساعة مع متابعة تواريخ الصلاحية.",
-          "Gradually build water/food supplies to 72 hours and track expiry dates."
-        );
-      }
-      if(weakIdx.has(8)){
-        addTip(
-          "حدّثوا حقيبة الإسعافات (ضمادات/مطهر/قفازات/مقص/مسكنات أساسية) وتأكدوا من الصلاحية.",
-          "Update the first-aid kit (bandages/antiseptic/gloves/scissors/basic pain relief) and check expiry."
-        );
-      }
-      if(weakIdx.has(9)){
-        addTip(
-          "اختبروا كاشف الدخان شهريًا، واستبدلوا البطارية عند الحاجة.",
-          "Test the smoke detector monthly and replace batteries when needed."
-        );
-      }
-      if(weakIdx.has(10)){
-        addTip(
-          "اتفقوا داخل الأسرة على مكان فصل الغاز والكهرباء وخطوات الإجراء في الحالات البسيطة.",
-          "Make sure everyone knows where/how to shut off gas/electricity for simple situations."
-        );
-      }
-
-      // Household-specific
-      if(hasKids){
-        addTip(
-          "لوجود أطفال: أضيفوا مستلزمات خاصة (حليب/حفاضات/مناديل/أدوية مناسبة) ضمن حقيبة الطوارئ.",
-          "With kids: add child essentials (formula/diapers/wipes/appropriate meds) to the kit."
-        );
-      }
-      if(hasSeniors){
-        addTip(
-          "لوجود كبار سن: حضّروا قائمة أدوية + ملخص طبي + وسيلة نقل سهلة عند الحاجة.",
-          "With seniors: prepare a meds list + medical summary + easy transport plan."
-        );
-      }
-      if(hasDet){
-        addTip(
-          "لوجود أصحاب همم: جهّزوا خطة إخلاء عملية داخل المنزل (مسار واضح + احتياج المساعدة).",
-          "With PoD: prepare a practical in-home evacuation plan (clear route + support needs)."
-        );
-      }
-      if(hasMeds){
-        addTip(
-          "لوجود أدوية يومية: وفّروا احتياط 7 أيام إن أمكن + تذكير شهري للتحقق من الكمية والصلاحية.",
-          "For daily meds: keep a 7-day backup if possible + monthly check for quantity/expiry."
-        );
-      }
-
-      if(suppliesDuration <= 1){
-        addTip(
-          "مدة الاكتفاء منخفضة: ارفعوا المخزون تدريجيًا حتى 72 ساعة بدون ضغط.",
-          "Low supply duration: gradually build to 72 hours without stress."
-        );
-      }
-
-      if(residents >= 6){
-        addTip(
-          "عدد القاطنين كبير: وزّعوا مسؤوليات بسيطة (ماء/غذاء/إسعاف/تواصل) لتسريع الاستجابة.",
-          "Larger household: assign simple responsibilities (water/food/first aid/comms) for faster response."
-        );
-      }
-
-      if(tips.length === 0){
-        addTip(
-          "جاهزيتكم جيدة. حافظوا على مراجعة الخطة والمخزون كل 3 أشهر لتبقى الأمور مرتبة.",
-          "You’re in a good place. Review plan and supplies every 3 months to stay ready."
-        );
-      }
-
-      document.getElementById("result").style.display = "block";
-      document.getElementById("badgeLevel").innerText = badgeText;
-      document.getElementById("scoreText").innerText = `${t.scoreLine}${percent}% — ${levelText}`;
-      document.getElementById("progressBar").style.width = percent + "%";
-
-      const recHtml = `
-        <div class="title">${t.tipsTitle}</div>
-        <ul>${tips.map(x => `<li>${escapeHtml(x)}</li>`).join("")}</ul>
-      `;
-      document.getElementById("recommendation").innerHTML = recHtml;
-
-      // Update axis chart
-      updateAxisChart();
-
-      // Scroll to results
-      try{ document.getElementById("results").scrollIntoView({behavior:"smooth", block:"start"}); }catch(e){}
-    }
-
-    function resetAll(){
-      document.getElementById("housingType").value = "";
-      document.getElementById("area").value = "";
-      document.getElementById("residents").value = "";
-      document.getElementById("suppliesDuration").value = "0";
-      document.getElementById("hasKids").checked = false;
-      document.getElementById("hasSeniors").checked = false;
-      document.getElementById("hasDetermination").checked = false;
-      document.getElementById("hasMeds").checked = false;
-      document.getElementById("commitGuidelines").checked = false;
-      document.getElementById("feedback").value = "";
-
-      const qs = getQuestions();
-      for(let i=1; i<=qs.length; i++){
-        const el = document.getElementById(`q-${i}`);
-        if(el) el.value = "0";
-      }
-
-      document.getElementById("result").style.display = "none";
-      document.getElementById("progressBar").style.width = "0%";
-      document.getElementById("badgeLevel").innerText = "—";
-      document.getElementById("scoreText").innerText = "—";
-      document.getElementById("recommendation").innerHTML = "";
-
-      document.getElementById("planPct").innerText = "—";
-      document.getElementById("supPct").innerText = "—";
-      document.getElementById("safePct").innerText = "—";
-      document.getElementById("barPlan").style.width = "0%";
-      document.getElementById("barSup").style.width  = "0%";
-      document.getElementById("barSafe").style.width = "0%";
-    }
-
-    // =========================
-    // Feedback (local save + optional form)
-    // =========================
-    function saveFeedbackLocal(){
-      const t = i18n[currentLang()];
-      const text = (document.getElementById("feedback").value || "").trim();
-      if(!text){
-        alert(t.writeFirst);
-        return;
-      }
-      const key = "emergency_feedback_local";
-      const arr = JSON.parse(localStorage.getItem(key) || "[]");
-      arr.push({text, at: new Date().toISOString()});
-      localStorage.setItem(key, JSON.stringify(arr));
-      alert(t.savedLocal);
-      document.getElementById("feedback").value = "";
-    }
-
-    function openFeedbackForm(){
-      const t = i18n[currentLang()];
-      if(!FEEDBACK_FORM_URL){
-        alert(t.addFormUrl);
-        return;
-      }
-      window.open(FEEDBACK_FORM_URL, "_blank");
-    }
-
-    function escapeHtml(str){
-      return String(str)
-        .replaceAll("&","&amp;")
-        .replaceAll("<","&lt;")
-        .replaceAll(">","&gt;")
-        .replaceAll('"',"&quot;")
-        .replaceAll("'","&#039;");
-    }
-
-    // Init
-    setLang(localStorage.getItem("lang") || "ar");
-    renderQuestions();
-    updateTotalVisits();
-  </script>
-</body>
-</html>
+     
