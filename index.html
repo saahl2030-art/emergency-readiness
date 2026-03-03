@@ -3,18 +3,13 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>جاهز للأزمات والطوارئ؟</title>
-
-  <!-- ✅ Cloudflare Web Analytics (Tracking) -->
-  <script defer src="https://static.cloudflareinsights.com/beacon.min.js"
-    data-cf-beacon='{"token": "939903ca17af478c93e70f9660a1a73f"}'></script>
-  <!-- ✅ End Cloudflare Web Analytics -->
+  <title>تقييم الجاهزية للطوارئ</title>
 
   <style>
     :root{
-      --bg:#071521;
-      --bg2:#081a2a;
-      --card:rgba(255,255,255,.06);
+      --bg0:#071521;
+      --bg1:#081a2a;
+      --panel:rgba(255,255,255,.06);
       --border:rgba(255,255,255,.10);
       --text:#eaf4ff;
       --muted:rgba(234,244,255,.72);
@@ -26,135 +21,335 @@
     *{box-sizing:border-box}
     body{
       margin:0;
-      font-family: Tahoma, Arial, sans-serif;
+      font-family:Tahoma, Arial, sans-serif;
       color:var(--text);
       background:
-        radial-gradient(900px 520px at 20% 15%, rgba(96,165,250,.22), transparent 60%),
-        radial-gradient(900px 520px at 85% 75%, rgba(52,211,153,.18), transparent 62%),
-        linear-gradient(180deg, var(--bg), var(--bg2));
+        radial-gradient(900px 500px at 80% 15%, rgba(96,165,250,.22), transparent 55%),
+        radial-gradient(900px 500px at 20% 85%, rgba(52,211,153,.16), transparent 60%),
+        linear-gradient(180deg, var(--bg0), var(--bg1));
       min-height:100vh;
     }
 
     .topbar{
       position:sticky; top:0; z-index:10;
-      backdrop-filter: blur(10px);
-      background: linear-gradient(180deg, rgba(7,21,33,.92), rgba(7,21,33,.68));
+      background:linear-gradient(180deg, rgba(7,21,33,.92), rgba(7,21,33,.68));
       border-bottom:1px solid var(--border);
+      backdrop-filter: blur(10px);
       padding:12px 16px;
-      display:flex; align-items:center; justify-content:space-between; gap:12px;
+      display:flex;
+      justify-content:space-between;
+      align-items:center;
+      gap:12px;
     }
     .brand{
       display:flex; align-items:center; gap:10px;
       font-weight:900;
       white-space:nowrap;
     }
-    .dot{
+    .brand .dot{
       width:10px; height:10px; border-radius:999px;
-      background: linear-gradient(90deg, var(--accent2), var(--accent));
-      box-shadow: 0 0 26px rgba(52,211,153,.28);
+      background:linear-gradient(90deg,var(--accent2),var(--accent));
+      box-shadow:0 0 22px rgba(52,211,153,.30);
     }
-
     .lang{
       display:flex; gap:8px; align-items:center;
+      flex-wrap:wrap;
     }
     .btn{
       border:1px solid var(--border);
-      background: rgba(255,255,255,.06);
-      color: var(--text);
+      background:rgba(255,255,255,.06);
+      color:var(--text);
       padding:8px 12px;
       border-radius:999px;
-      font-weight:800;
       cursor:pointer;
-      transition:.15s;
+      font-weight:800;
+      transition:.15s ease;
     }
-    .btn:hover{ background: rgba(255,255,255,.10); transform: translateY(-1px); }
+    .btn:hover{ background:rgba(255,255,255,.10); transform:translateY(-1px); }
     .btn.primary{
       border:none;
-      background: linear-gradient(90deg, var(--accent2), var(--accent));
+      background:linear-gradient(90deg,var(--accent2),var(--accent));
       color:#062033;
-      box-shadow: 0 12px 30px rgba(96,165,250,.14);
+      box-shadow:0 10px 30px rgba(96,165,250,.18);
     }
 
-    .wrap{ max-width:1050px; margin:0 auto; padding:28px 16px 64px; }
-    .hero{
+    .wrap{
+      max-width:1050px;
+      margin:0 auto;
+      padding:22px 16px 70px;
+      display:grid;
+      grid-template-columns: 1fr;
+      gap:14px;
+    }
+
+    .headerCard{
       border:1px solid var(--border);
-      background: linear-gradient(180deg, rgba(255,255,255,.07), rgba(255,255,255,.04));
-      border-radius: var(--radius);
-      box-shadow: var(--shadow);
-      padding:32px 18px;
-      text-align:center;
+      background:rgba(255,255,255,.05);
+      border-radius:var(--radius);
+      box-shadow:var(--shadow);
+      padding:18px 16px;
     }
     h1{
-      margin:0 0 10px;
-      font-size:44px;
-      line-height:1.1;
+      margin:0 0 6px;
+      font-size:28px;
       letter-spacing:.2px;
     }
     .sub{
-      margin:0 auto 16px;
-      max-width:820px;
+      margin:0;
       color:var(--muted);
-      font-size:18px;
       line-height:1.9;
+      font-size:14.8px;
     }
-
-    .kpis{
+    .counter{
+      margin-top:10px;
       display:flex;
-      justify-content:center;
+      justify-content:flex-start;
       gap:10px;
+      color:rgba(234,244,255,.70);
+      font-size:13.5px;
       flex-wrap:wrap;
-      margin: 12px 0 0;
     }
     .pill{
       border:1px solid var(--border);
-      background: rgba(255,255,255,.05);
-      padding:8px 12px;
+      background:rgba(255,255,255,.05);
+      padding:6px 10px;
       border-radius:999px;
-      font-weight:800;
-      color: var(--muted);
-      font-size:13px;
       white-space:nowrap;
     }
-    .pill b{ color: var(--text); }
-
-    .ctaRow{
-      display:flex;
-      justify-content:center;
-      gap:12px;
-      flex-wrap:wrap;
-      margin-top:18px;
-    }
-    a{ text-decoration:none; }
 
     .grid{
-      margin-top:18px;
       display:grid;
-      grid-template-columns:repeat(3, 1fr);
-      gap:12px;
+      grid-template-columns: 1.2fr .8fr;
+      gap:14px;
+      align-items:start;
     }
-    .card{
+    .panel{
       border:1px solid var(--border);
-      background: rgba(255,255,255,.05);
-      border-radius:16px;
-      padding:16px 14px;
-      box-shadow: 0 16px 44px rgba(0,0,0,.22);
-      min-height:140px;
+      background:rgba(255,255,255,.05);
+      border-radius:var(--radius);
+      box-shadow:0 16px 40px rgba(0,0,0,.25);
+      padding:16px;
     }
-    .card h3{ margin:0 0 8px; font-size:18px; }
-    .card p{ margin:0; color:var(--muted); line-height:1.8; font-size:14.5px; }
 
-    .footer{
-      margin-top:22px;
-      text-align:center;
-      color: rgba(234,244,255,.55);
+    .sectionTitle{
+      margin:0 0 10px;
+      font-size:16px;
+      font-weight:900;
+      color:rgba(234,244,255,.92);
+    }
+
+    .fieldRow{
+      display:grid;
+      grid-template-columns: 1fr 1fr;
+      gap:10px;
+      margin-bottom:12px;
+    }
+    label{
+      display:block;
+      margin-bottom:6px;
+      color:rgba(234,244,255,.85);
+      font-size:13.5px;
+      font-weight:800;
+    }
+    select, input, textarea{
+      width:100%;
+      padding:10px 12px;
+      border-radius:12px;
+      border:1px solid rgba(255,255,255,.12);
+      background:rgba(0,0,0,.18);
+      color:var(--text);
+      outline:none;
+    }
+    textarea{ resize:vertical; }
+    input::placeholder, textarea::placeholder{ color: rgba(234,244,255,.45); }
+
+    .checks{
+      display:grid;
+      grid-template-columns:1fr;
+      gap:10px;
+      margin-bottom:12px;
+    }
+    .check{
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      gap:10px;
+      padding:10px 12px;
+      border:1px solid rgba(255,255,255,.10);
+      background:rgba(255,255,255,.04);
+      border-radius:14px;
+    }
+    .check .left{
+      display:flex; align-items:center; gap:10px;
+    }
+    .check input{ width:auto; transform:scale(1.05); }
+    .check span{ color:rgba(234,244,255,.88); font-weight:800; font-size:14px }
+
+    .q{
+      margin:12px 0;
+      padding:12px 12px;
+      border:1px solid rgba(255,255,255,.10);
+      background:rgba(255,255,255,.04);
+      border-radius:16px;
+    }
+    .qHead{
+      display:flex;
+      justify-content:space-between;
+      align-items:flex-start;
+      gap:10px;
+      margin-bottom:10px;
+      font-weight:900;
+      line-height:1.6;
+    }
+
+    .actionRow{
+      display:flex;
+      gap:10px;
+      margin-top:10px;
+      flex-wrap:wrap;
+    }
+
+    .resultBox{
+      display:none;
+      margin-top:12px;
+      padding:14px;
+      border-radius:16px;
+      border:1px solid rgba(255,255,255,.12);
+      background:rgba(255,255,255,.04);
+    }
+    .scoreLine{
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      gap:10px;
+      font-weight:900;
+      flex-wrap:wrap;
+    }
+    .badge{
+      padding:6px 10px;
+      border-radius:999px;
+      background:rgba(96,165,250,.14);
+      border:1px solid rgba(96,165,250,.30);
+      color:rgba(234,244,255,.95);
       font-size:12.5px;
+      font-weight:900;
+      white-space:nowrap;
+    }
+    .progress{
+      margin:10px 0 8px;
+      height:12px;
+      border-radius:999px;
+      background:rgba(255,255,255,.12);
+      overflow:hidden;
+    }
+    .bar{
+      height:100%;
+      width:0%;
+      border-radius:999px;
+      background:linear-gradient(90deg,var(--accent2),var(--accent));
+      transition: width .25s ease;
+    }
+    .rec{
+      margin-top:8px;
+      color:rgba(234,244,255,.88);
+      line-height:1.95;
+      font-size:14px;
+    }
+    .rec .title{ font-weight:900; margin-bottom:6px; }
+    .rec ul{ margin:10px 0 0; padding:0 18px }
+    .rec li{ margin:7px 0 }
+
+    /* =========================
+       Modal Base (reused)
+       ========================= */
+    .modalOverlay{
+      position:fixed;
+      inset:0;
+      background:rgba(0,0,0,.55);
+      backdrop-filter: blur(6px);
+      display:none;
+      align-items:center;
+      justify-content:center;
+      padding:16px;
+      z-index:9999;
+    }
+    .modal{
+      width:min(680px, 100%);
+      border:1px solid rgba(255,255,255,.14);
+      background:linear-gradient(180deg, rgba(255,255,255,.08), rgba(255,255,255,.04));
+      border-radius:18px;
+      box-shadow:0 30px 90px rgba(0,0,0,.55);
+      padding:16px 16px 14px;
+    }
+    .modalHeader{
+      display:flex;
+      align-items:flex-start;
+      justify-content:space-between;
+      gap:10px;
+    }
+    .modalTitle{
+      margin:0;
+      font-size:18px;
+      font-weight:900;
+      color:rgba(234,244,255,.96);
+      line-height:1.4;
+    }
+    .modalClose{
+      border:1px solid rgba(255,255,255,.14);
+      background:rgba(255,255,255,.06);
+      color:rgba(234,244,255,.92);
+      width:36px;
+      height:36px;
+      border-radius:12px;
+      cursor:pointer;
+      font-weight:900;
+    }
+    .modalClose:hover{ background:rgba(255,255,255,.10); }
+    .modalBody{
+      margin-top:10px;
+      color:rgba(234,244,255,.85);
+      line-height:2;
+      font-size:14.6px;
+    }
+    .modalBody .strong{
+      display:block;
+      margin:10px 0 0;
+      font-weight:900;
+      color:rgba(234,244,255,.96);
+    }
+    .modalActions{
+      margin-top:12px;
+      display:flex;
+      gap:10px;
+      flex-wrap:wrap;
+    }
+    .modalActions .btn{ flex: 1 1 auto; }
+
+    /* Feedback iframe */
+    .iframeBox{
+      margin-top:10px;
+      border:1px solid rgba(255,255,255,.12);
+      border-radius:16px;
+      overflow:hidden;
+      background:rgba(0,0,0,.18);
+    }
+    .iframeBox iframe{
+      width:100%;
+      height:min(70vh, 640px);
+      border:0;
+      display:block;
+    }
+    .hintSmall{
+      margin-top:8px;
+      color:rgba(234,244,255,.65);
+      font-size:12.8px;
       line-height:1.7;
     }
 
     @media (max-width:980px){
-      h1{ font-size:34px; }
       .grid{ grid-template-columns:1fr; }
-      .hero{ padding:26px 16px; }
+      .fieldRow{ grid-template-columns:1fr; }
+      .modal{ width:min(720px, 100%); }
     }
   </style>
 </head>
@@ -165,174 +360,289 @@
     <div class="lang">
       <button class="btn" onclick="setLang('ar')">AR</button>
       <button class="btn" onclick="setLang('en')">EN</button>
-      <a href="survey.html"><button class="btn primary" id="topCta">ابدأ التقييم</button></a>
+      <a href="index.html"><button class="btn primary" id="backBtn">الرئيسية</button></a>
     </div>
   </div>
 
   <div class="wrap">
-    <div class="hero">
-      <h1 id="hTitle">جاهز للأزمات والطوارئ؟</h1>
-      <p class="sub" id="hSub">
-        تقييم سريع وهادئ لمدى جاهزية أسرتك، مع توصيات عملية تساعدك على ترتيب الأولويات .
-      </p>
+    <div class="headerCard">
+      <h1 id="pageTitle">قيّم جاهزيتك خلال دقيقة</h1>
+      <p class="sub" id="pageSub">أجب باختصار لتحصل على مؤشر جاهزية وتوصيات عملية قابلة للتنفيذ.</p>
 
-      <div class="kpis">
-        <div class="pill"><b id="kQ">10</b> <span id="kQText">أسئلة</span></div>
-        <div class="pill" id="kpiTime"><span id="kTime">المدة:</span> <b>1–2</b> <span id="kMin">دقيقة</span></div>
-
-        <!-- ✅ Firestore counter -->
-        <div class="pill">
-          <span id="kpiVisitsLabel">إجمالي الزيارات:</span>
-          <b id="visitsNow">...</b>
-        </div>
-      </div>
-
-      <div class="ctaRow">
-        <a href="survey.html"><button class="btn primary" id="ctaMain">ابدأ التقييم الآن</button></a>
-        <a href="survey.html#results"><button class="btn" id="ctaSecondary">النتيجة والتوصيات</button></a>
+      <div class="counter">
+        <span class="pill" id="visitCounter">إجمالي الزيارات: ...</span>
+        <span class="pill" id="qCountPill">عدد الأسئلة: 10</span>
+        <span class="pill" id="timePill">المدة: 1–2 دقيقة</span>
       </div>
     </div>
 
     <div class="grid">
-      <div class="card">
-        <h3 id="c1t">التخطيط</h3>
-        <p id="c1p">خطة مختصرة + أدوار واضحة + نقطة تجمع.</p>
+      <!-- Survey -->
+      <div class="panel">
+        <div class="sectionTitle" id="secHome">بيانات السكن</div>
+
+        <div class="fieldRow">
+          <div>
+            <label id="lblHousingType">نوع السكن</label>
+            <select id="housingType">
+              <option value="" selected>— اختر —</option>
+              <option value="apartment">شقة</option>
+              <option value="villa">فيلا</option>
+              <option value="shared">سكن مشترك</option>
+              <option value="other">أخرى</option>
+            </select>
+          </div>
+
+          <div>
+            <label id="lblArea">المنطقة / المدينة</label>
+            <input id="area" type="text" placeholder="مثال: أبوظبي - الخالدية" />
+          </div>
+        </div>
+
+        <div class="fieldRow">
+          <div>
+            <label id="lblResidents">عدد القاطنين</label>
+            <input id="residents" type="number" min="1" placeholder="مثال: 6" />
+          </div>
+          <div>
+            <label id="lblSupplies">مدة الاكتفاء (ماء + غذاء)</label>
+            <select id="suppliesDuration">
+              <option value="0" selected>أقل من 24 ساعة</option>
+              <option value="1">24–48 ساعة</option>
+              <option value="2">48–72 ساعة</option>
+              <option value="3">أكثر من 72 ساعة</option>
+            </select>
+          </div>
+        </div>
+
+        <div class="checks">
+          <div class="check">
+            <div class="left">
+              <input id="hasKids" type="checkbox" />
+              <span id="chkKids">يوجد أطفال (أقل من 5 سنوات)</span>
+            </div>
+          </div>
+          <div class="check">
+            <div class="left">
+              <input id="hasSeniors" type="checkbox" />
+              <span id="chkSeniors">يوجد كبار سن (+65)</span>
+            </div>
+          </div>
+          <div class="check">
+            <div class="left">
+              <input id="hasDetermination" type="checkbox" />
+              <span id="chkDetermination">يوجد شخص من أصحاب الهمم</span>
+            </div>
+          </div>
+          <div class="check">
+            <div class="left">
+              <input id="hasMeds" type="checkbox" />
+              <span id="chkMeds">يوجد شخص يحتاج أدوية يومية</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="sectionTitle" id="secCompliance">الالتزام بالإرشادات</div>
+        <div class="q">
+          <div class="check" style="margin:0">
+            <div class="left">
+              <input id="commitGuidelines" type="checkbox" />
+              <span id="commitText">أتعهد بالالتزام بإرشادات الهيئة الوطنية لإدارة الأزمات والطوارئ والجهات الرسمية المختصة.</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="sectionTitle" id="secQuestions">أسئلة الجاهزية (10)</div>
+        <div id="questions"></div>
+
+        <div class="actionRow">
+          <button class="btn primary" type="button" onclick="calculate()" id="btnCalc">احسب النتيجة</button>
+          <button class="btn" type="button" onclick="resetAll()" id="btnReset">مسح</button>
+        </div>
+
+        <div class="resultBox" id="result">
+          <div class="scoreLine">
+            <div class="badge" id="badgeLevel">—</div>
+            <div id="scoreText">—</div>
+          </div>
+          <div class="progress"><div class="bar" id="progressBar"></div></div>
+          <div class="rec" id="recommendation"></div>
+
+          <hr style="border:none;border-top:1px solid rgba(255,255,255,.12);margin:14px 0">
+
+          <div class="sectionTitle" id="secChart">ملخص المحاور</div>
+          <div class="q" style="margin-top:10px">
+            <div class="qHead"><div id="chartTitle">نتيجتك حسب المحاور</div></div>
+
+            <div style="display:grid;gap:10px">
+              <div>
+                <div style="display:flex;justify-content:space-between;font-weight:900">
+                  <span id="axisPlan">التخطيط</span><span id="planPct">—</span>
+                </div>
+                <div class="progress"><div class="bar" id="barPlan"></div></div>
+              </div>
+
+              <div>
+                <div style="display:flex;justify-content:space-between;font-weight:900">
+                  <span id="axisSup">التجهيزات</span><span id="supPct">—</span>
+                </div>
+                <div class="progress"><div class="bar" id="barSup"></div></div>
+              </div>
+
+              <div>
+                <div style="display:flex;justify-content:space-between;font-weight:900">
+                  <span id="axisSafe">السلامة</span><span id="safePct">—</span>
+                </div>
+                <div class="progress"><div class="bar" id="barSafe"></div></div>
+              </div>
+            </div>
+          </div>
+
+          <div class="sectionTitle" id="secFeedback" style="margin-top:14px">ملاحظاتك لتحسين الاستعداد</div>
+          <div class="q">
+            <div class="qHead">
+              <div id="fbTitle">اكتب اقتراحك أو ملاحظتك (اختياري)</div>
+            </div>
+
+            <textarea id="feedback" rows="4"
+              placeholder="مثال: نحتاج إضافة سؤال عن نقطة إغلاق الماء..."></textarea>
+
+            <div class="actionRow" style="margin-top:10px">
+              <button class="btn primary" type="button" onclick="saveFeedbackLocal()" id="btnSaveFb">حفظ الملاحظة</button>
+              <button class="btn" type="button" onclick="openFeedbackForm()" id="btnSendFb">إرسال الملاحظة</button>
+            </div>
+
+            <p class="sub" style="margin-top:10px" id="fbNote">
+              * زر “إرسال الملاحظة” يفتح نموذجًا بدون إظهار بريدك. اكتب فقط الملاحظة واضغط إرسال.
+            </p>
+          </div>
+
+        </div>
       </div>
-      <div class="card">
-        <h3 id="c2t">التجهيزات</h3>
-        <p id="c2p">ماء وغذاء + إسعافات + إضاءة وبطاريات.</p>
-      </div>
-      <div class="card">
-        <h3 id="c3t">السلامة</h3>
-        <p id="c3p">كاشف دخان + طفاية + معرفة فصل الغاز والكهرباء.</p>
+
+      <!-- Summary / Results -->
+      <div class="panel" id="results">
+        <div class="sectionTitle" id="secResult">النتيجة</div>
+        <p class="sub" id="resultHint">
+          بعد الحساب ستظهر نسبة جاهزية + توصيات مرتبة حسب نقاط الضعف، مع مراعاة احتياجات الأسرة.
+        </p>
+
+        <div style="height:10px"></div>
+
+        <div class="sectionTitle" id="secNote">ملاحظة</div>
+        <p class="sub" id="noteText">
+          هذا المؤشر توعوي لتنظيم الاستعداد، ولا يغني عن تعليمات الجهات المختصة.
+        </p>
       </div>
     </div>
+  </div>
 
-    <div class="footer" id="foot">
-      أداة توعوية لتنظيم الاستعداد، وليست بديلاً عن تعليمات الجهات الرسمية.
+  <!-- ✅ National Message Modal (shows once per user) -->
+  <div class="modalOverlay" id="uaeModalOverlay" role="dialog" aria-modal="true" aria-labelledby="uaeModalTitle">
+    <div class="modal" id="uaeModal">
+      <div class="modalHeader">
+        <h3 class="modalTitle" id="uaeModalTitle">معًا نعزز أمن وطننا</h3>
+        <button class="modalClose" type="button" id="uaeModalClose" aria-label="إغلاق">✕</button>
+      </div>
+
+      <div class="modalBody" id="uaeModalBody">
+        استعدادك اليوم يعكس وعيًا يليق بوطنٍ بُني على المسؤولية والتكاتف.<br>
+        كل الشكر والتقدير لكل من يسهر لحماية الإمارات وأمنها واستقرارها.<br>
+        <span class="strong">حفظ الله الإمارات دائمًا وأبدًا.</span>
+      </div>
+
+      <div class="modalActions">
+        <button class="btn primary" type="button" id="uaeModalOk">تم</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ✅ Feedback Modal (iframe Google Form) -->
+  <div class="modalOverlay" id="fbModalOverlay" role="dialog" aria-modal="true" aria-labelledby="fbModalTitle">
+    <div class="modal" id="fbModal">
+      <div class="modalHeader">
+        <h3 class="modalTitle" id="fbModalTitle">إرسال ملاحظة</h3>
+        <button class="modalClose" type="button" id="fbModalClose" aria-label="إغلاق">✕</button>
+      </div>
+
+      <div class="modalBody" id="fbModalBody">
+        اكتب ملاحظتك في النموذج ثم اضغط “إرسال”.
+        <div class="iframeBox">
+          <iframe id="fbFrame" src="" loading="lazy" referrerpolicy="no-referrer"></iframe>
+        </div>
+        <div class="hintSmall" id="fbPrivacyHint">
+          * ملاحظة: إذا كنت مسجّل دخولك في Google قد يظهر حسابك لك أنت فقط، لكن لن يظهر للزوار الآخرين ما لم تُفعّل جمع البريد داخل إعدادات النموذج.
+        </div>
+      </div>
+
+      <div class="modalActions">
+        <button class="btn" type="button" id="fbOpenNewTab">فتح في نافذة جديدة</button>
+        <button class="btn primary" type="button" id="fbDone">تم</button>
+      </div>
     </div>
   </div>
 
   <script>
     // =========================
+    // CONFIG
+    // =========================
+    const FEEDBACK_FORM_URL = "https://forms.gle/ASoBCYgCxW4JvBDVA"; // رابط الفورم (بدون إظهار بريدك للزوار)
+
+    // =========================
+    // CountAPI - Total visits (increase once per session)
+    // =========================
+    const namespace = "emergency-readiness-uae";
+    const key = "total-visits";
+
+    async function updateTotalVisits(){
+      const counted = sessionStorage.getItem("counted_total");
+      try{
+        const url = counted
+          ? `https://api.countapi.xyz/get/${encodeURIComponent(namespace)}/${encodeURIComponent(key)}`
+          : `https://api.countapi.xyz/hit/${encodeURIComponent(namespace)}/${encodeURIComponent(key)}`;
+
+        const r = await fetch(url, { cache: "no-store" });
+        const j = await r.json();
+        if(!counted) sessionStorage.setItem("counted_total","1");
+
+        const t = i18n[currentLang()];
+        const val = (j && typeof j.value === "number") ? j.value : null;
+        document.getElementById("visitCounter").innerText = t.visit + (val===null ? "—" : val.toLocaleString("en-US"));
+      }catch(e){
+        const t = i18n[currentLang()];
+        document.getElementById("visitCounter").innerText = t.visit + "—";
+      }
+    }
+
+    // =========================
     // i18n
     // =========================
     const i18n = {
-      ar:{
+      ar: {
         brand:"جاهز",
-        title:"جاهز للأزمات والطوارئ؟",
-        sub:"تقييم سريع وهادئ لمدى جاهزية أسرتك، مع توصيات عملية تساعدك على ترتيب الأولويات .",
-        topCta:"ابدأ التقييم",
-        ctaMain:"ابدأ التقييم الآن",
-        ctaSecondary:"النتيجة والتوصيات",
-        c1t:"التخطيط", c1p:"خطة مختصرة + أدوار واضحة + نقطة تجمع.",
-        c2t:"التجهيزات", c2p:"ماء وغذاء + إسعافات + إضاءة وبطاريات.",
-        c3t:"السلامة", c3p:"كاشف دخان + طفاية + معرفة فصل الغاز والكهرباء.",
-        foot:"أداة توعوية لتنظيم الاستعداد، وليست بديلاً عن تعليمات الجهات الرسمية.",
-        visitsLabel:"إجمالي الزيارات:",
-        qText:"أسئلة",
-        time:"المدة:",
-        min:"دقيقة"
-      },
-      en:{
-        brand:"Ready",
-        title:"Ready for emergencies?",
-        sub:"A calm, quick assessment of your family readiness with practical, non-alarming recommendations.",
-        topCta:"Start",
-        ctaMain:"Start Assessment",
-        ctaSecondary:"Results & tips",
-        c1t:"Planning", c1p:"Short plan + clear roles + meeting point.",
-        c2t:"Supplies", c2p:"Water/food + first aid + lights & batteries.",
-        c3t:"Safety", c3p:"Smoke detector + extinguisher + shut-off knowledge.",
-        foot:"Awareness tool only — not a replacement for official guidance.",
-        visitsLabel:"Total visits:",
-        qText:"questions",
-        time:"Time:",
-        min:"min"
-      }
-    };
+        back:"الرئيسية",
+        pageTitle:"قيّم جاهزيتك خلال دقيقة",
+        pageSub:"أجب باختصار لتحصل على مؤشر جاهزية وتوصيات عملية قابلة للتنفيذ.",
+        visit:"إجمالي الزيارات: ",
+        qCount:"عدد الأسئلة: 10",
+        time:"المدة: 1–2 دقيقة",
 
-    function setLang(lang){
-      localStorage.setItem("lang", lang);
-      const t = i18n[lang] || i18n.ar;
+        secHome:"بيانات السكن",
+        lblHousingType:"نوع السكن",
+        lblArea:"المنطقة / المدينة",
+        lblResidents:"عدد القاطنين",
+        lblSupplies:"مدة الاكتفاء (ماء + غذاء)",
 
-      document.documentElement.lang = lang;
-      document.documentElement.dir  = (lang === "ar") ? "rtl" : "ltr";
+        chkKids:"يوجد أطفال (أقل من 5 سنوات)",
+        chkSeniors:"يوجد كبار سن (+65)",
+        chkDetermination:"يوجد شخص من أصحاب الهمم",
+        chkMeds:"يوجد شخص يحتاج أدوية يومية",
 
-      document.getElementById("brandText").innerText = t.brand;
-      document.getElementById("hTitle").innerText = t.title;
-      document.getElementById("hSub").innerText = t.sub;
-      document.getElementById("topCta").innerText = t.topCta;
-      document.getElementById("ctaMain").innerText = t.ctaMain;
-      document.getElementById("ctaSecondary").innerText = t.ctaSecondary;
+        secCompliance:"الالتزام بالإرشادات",
+        commitText:"أتعهد بالالتزام بإرشادات الهيئة الوطنية لإدارة الأزمات والطوارئ والجهات الرسمية المختصة.",
 
-      document.getElementById("c1t").innerText = t.c1t;
-      document.getElementById("c1p").innerText = t.c1p;
-      document.getElementById("c2t").innerText = t.c2t;
-      document.getElementById("c2p").innerText = t.c2p;
-      document.getElementById("c3t").innerText = t.c3t;
-      document.getElementById("c3p").innerText = t.c3p;
+        secQuestions:"أسئلة الجاهزية (10)",
+        btnCalc:"احسب النتيجة",
+        btnReset:"مسح",
 
-      document.getElementById("foot").innerText = t.foot;
-
-      document.getElementById("kpiVisitsLabel").innerText = t.visitsLabel;
-      document.getElementById("kQText").innerText = t.qText;
-      document.getElementById("kTime").innerText = t.time;
-      document.getElementById("kMin").innerText = t.min;
-    }
-
-    setLang(localStorage.getItem("lang") || "ar");
-  </script>
-
-  <!-- ✅ Firebase Visits Counter (Counts EVERY visit / refresh) -->
-  <script type="module">
-    import { initializeApp } from "https://www.gstatic.com/firebasejs/12.0.0/firebase-app.js";
-    import { getFirestore, doc, runTransaction } from "https://www.gstatic.com/firebasejs/12.0.0/firebase-firestore.js";
-
-    // 🔧 Firebase config (as shown in your Firebase Web App setup)
-    const firebaseConfig = {
-      apiKey: "AIzaSyCQ88fSwPD5gszcUnMtvtvgd6aAjRRuK8",
-      authDomain: "emergency-counter-1b927.firebaseapp.com",
-      projectId: "emergency-counter-1b927",
-      storageBucket: "emergency-counter-1b927.firebasestorage.app",
-      messagingSenderId: "388342643780",
-      appId: "1:388342643780:web:84be4c4b81cfffe7d2d011"
-      // measurementId موجود عندك، لكنه غير مطلوب للعداد
-    };
-
-    const app = initializeApp(firebaseConfig);
-    const db = getFirestore(app);
-
-    async function incrementAndShow(){
-      const el = document.getElementById("visitsNow");
-      if(!el) return;
-
-      const ref = doc(db, "settings", "main");
-
-      try{
-        const newValue = await runTransaction(db, async (tx) => {
-          const snap = await tx.get(ref);
-
-          if(!snap.exists()){
-            tx.set(ref, { counter: 1 });
-            return 1;
-          }
-
-          const current = Number(snap.data().counter || 0);
-          const next = current + 1;
-          tx.update(ref, { counter: next });
-          return next;
-        });
-
-        el.innerText = newValue.toLocaleString("en-US");
-      }catch(e){
-        console.error("Counter error:", e);
-        el.innerText = "—";
-      }
-    }
-
-    incrementAndShow();
-  </script>
-
-</body>
-</html>
+     
