@@ -335,4 +335,27 @@
   </script>
 
 </body>
+  <div style="text-align:center; margin-top:20px;">
+  <button onclick="shareSurvey()" class="btn primary">
+    مشاركة الاستبيان
+  </button>
+</div>
+
+<script>
+function shareSurvey() {
+  const url = window.location.origin + window.location.pathname;
+
+  if (navigator.share) {
+    navigator.share({
+      title: "تقييم الجاهزية للطوارئ",
+      text: "جرب هذا الاستبيان السريع لتقييم جاهزية أسرتك",
+      url: url
+    });
+  } else {
+    navigator.clipboard.writeText(url);
+    alert("تم نسخ الرابط. شاركه مع الآخرين.");
+  }
+}
+</script>
 </html>
+
